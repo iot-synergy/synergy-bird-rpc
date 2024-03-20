@@ -1,0 +1,237 @@
+syntax = "proto3";
+
+package bird;
+option go_package = "./bird";
+
+message GalleryCreateReq {
+  optional string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  string name = 3;
+  string userId = 4;
+  int32 favorite = 5;
+  repeated string labels = 6;
+}
+
+message GalleryUpdateReq {
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  optional int32 recordState = 2;
+  optional string name = 3;
+  optional string userId = 4;
+  optional int32 favorite = 5;
+  repeated string labels = 6;
+}
+
+message GalleryListReq {
+  string userId = 1;
+  repeated string labels = 2;
+  int32 favorite = 3;
+  uint64 page = 4;
+  uint64 pageSize = 5;
+}
+
+message GalleryResp {
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string name = 4;
+  string userId = 5;
+  int32 favorite = 6;
+  repeated string labels = 7;
+}
+
+message GalleryListResp {
+  repeated GalleryResp results = 1;
+  int64 total = 2;
+  int64 code = 3;
+  string message = 4;
+}
+
+message IllustrationsCreateReq {
+  optional string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  string title = 3;
+  double score = 4;
+  string wikiUrl = 5;
+  string imagePath = 6;
+  repeated string moreImages = 7;
+  string type = 8;
+  repeated string labels = 9;
+  string description = 10;
+}
+
+message IllustrationsUpdateReq {
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  optional int32 recordState = 2;
+  optional string title = 3;
+  optional double score = 4;
+  optional string wikiUrl = 5;
+  optional string imagePath = 6;
+  repeated string moreImages = 7;
+  optional string type = 8;
+  repeated string labels = 9;
+  optional string description = 10;
+}
+
+message IllustrationsListReq {
+  repeated string labels = 1;
+  string userId = 2;
+  string type = 3;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 state = 4;
+  string keyword = 5;
+  uint64 page = 6;
+  uint64 pageSize = 7;
+}
+
+message FetchUserIllustrationReq {
+  repeated string labels = 1;
+  string userId = 2;
+  string type = 3;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 state = 4;
+  string keyword = 5;
+  uint64 page = 6;
+  uint64 pageSize = 7;
+}
+
+message IllustrationsResp {
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string title = 4;
+  double score = 5;
+  string wikiUrl = 6;
+  string imagePath = 7;
+  repeated string moreImages = 8;
+  string type = 9;
+  repeated string labels = 10;
+  string description = 11;
+}
+
+message IllustrationsListResp {
+  repeated IllustrationsResp results = 1;
+  int64 total = 2;
+  int64 code = 3;
+  string message = 4;
+}
+
+message FetchUserIllustrationResp {
+  string userId = 1;
+  string type = 2;
+  repeated string gainedIllustrations = 3;
+  string id = 4;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 5;
+  int64 createTime = 6;
+}
+
+message LabelCreateReq{
+  optional string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  string name = 3;
+  string type = 4;
+  string parentId = 5;
+  string userId = 6;
+}
+
+message LabelUpdateReq{
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  optional int32 recordState = 2;
+  optional string name = 3;
+  optional string type = 4;
+  optional string parentId = 5;
+  optional string userId = 6;
+}
+
+message LabelListReq {
+  string userId = 1;
+  string type = 2;
+  string parentId = 3;
+  uint64 page = 4;
+  uint64 pageSize = 5;
+}
+
+message LabelResp{
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string name = 4;
+  string type = 5;
+  string parentId = 6;
+  string userId = 7;
+}
+
+message LabelListResp {
+  repeated LabelResp results = 1;
+  int64 total = 2;
+  int64 code = 3;
+  string message = 4;
+}
+
+service bird {
+  //  group: gallery
+  rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
+  //  group: gallery
+  rpc galleryUpdate(GalleryUpdateReq) returns (GalleryResp);
+  //  group: gallery
+  rpc galleryList(GalleryListReq) returns (GalleryListResp);
+  //  group: illustration
+  rpc illustrationCreate(IllustrationsCreateReq) returns (IllustrationsResp);
+  //  group: illustration
+  rpc illustrationUpdate(IllustrationsUpdateReq) returns (IllustrationsResp);
+  //  group: illustration
+  rpc illustrationList(IllustrationsListReq) returns (IllustrationsListResp);
+  //  group: illustration
+  rpc fetchUserIllustration(FetchUserIllustrationReq) returns (FetchUserIllustrationResp);
+  //  group: label
+  rpc labelCreate(LabelCreateReq) returns (LabelResp);
+  //  group: label
+  rpc labelUpdate(LabelUpdateReq) returns (LabelResp);
+  //  group: label
+  rpc labelList(LabelListReq) returns (LabelListResp);
+}
