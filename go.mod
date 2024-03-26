@@ -1,4 +1,4 @@
-module synergy-bird-rpc
+module github.com/iot-synergy/synergy-bird-rpc
 
 go 1.21
 
