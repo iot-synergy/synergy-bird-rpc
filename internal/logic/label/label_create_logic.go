@@ -3,6 +3,7 @@ package label
 import (
 	"context"
 	"errors"
+	"github.com/zeromicro/go-zero/core/stores/mon"
 	model "synergy-bird-rpc/storage/label"
 	"time"
 
@@ -27,8 +28,20 @@ func NewLabelCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Label
 }
 
 func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp, error) {
-	// todo: add your logic here and delete this line
-	label, err := l.svcCtx.LabelModel.FindRecord(l.ctx, in.UserId, in.Name, in.Type, in.ParentId)
+	if in.ParentId != "" {
+		parent, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.ParentId)
+		if err != nil && !errors.Is(err, mon.ErrNotFound) {
+			logx.Error(err.Error())
+			return nil, err
+		}
+		if errors.Is(err, mon.ErrNotFound) || parent == nil {
+			return nil, errors.New("父节点id不存在")
+		}
+		if parent.RecordState != 2 {
+			return nil, errors.New("父节点不是健康的")
+		}
+	}
+	label, err := l.svcCtx.LabelModel.FindRecord(l.ctx, in.Name, in.Type, in.ParentId)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err
@@ -42,7 +55,6 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		Name:        in.Name,
 		Type:        in.Type,
 		ParentId:    in.ParentId,
-		UserId:      in.UserId,
 		RecordState: int8(in.RecordState),
 	}
 	err = l.svcCtx.LabelModel.Insert(l.ctx, &data)
@@ -57,6 +69,5 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		Name:        data.Name,
 		Type:        data.Type,
 		ParentId:    data.ParentId,
-		UserId:      data.UserId,
 	}, nil
 }

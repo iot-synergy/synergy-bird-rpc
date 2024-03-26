@@ -15,8 +15,8 @@ type (
 	// and implement the added methods in customLabelModel.
 	LabelModel interface {
 		labelModel
-		FindRecord(ctx context.Context, userId, name, typee, parentId string) (*Label, error)
-		FindListByParamAndPage(ctx context.Context, userId, typee, parentId string, page, pageSize uint64,
+		FindRecord(ctx context.Context, name, typee, parentId string) (*Label, error)
+		FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64,
 		) (*[]Label, int64, error)
 	}
 
@@ -33,13 +33,10 @@ func NewLabelModel(url, db, collection string) LabelModel {
 	}
 }
 
-func (m *customLabelModel) FindRecord(ctx context.Context, userId, name, typee, parentId string) (*Label, error) {
+func (m *customLabelModel) FindRecord(ctx context.Context, name, typee, parentId string) (*Label, error) {
 	var data Label
 
 	filterDate := make(map[string]interface{}) //查询条件data
-	if userId != "" {
-		filterDate["userId"] = userId
-	}
 	if name != "" {
 		filterDate["name"] = name
 	}
@@ -73,14 +70,11 @@ func (m *customLabelModel) FindRecord(ctx context.Context, userId, name, typee, 
 	}
 }
 
-func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, userId, typee, parentId string, page, pageSize uint64,
+func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64,
 ) (*[]Label, int64, error) {
 	data := make([]Label, 0)
 
 	filterDate := make(map[string]interface{}) //查询条件data
-	if userId != "" {
-		filterDate["userId"] = userId
-	}
 	if typee != "" {
 		filterDate["type"] = typee
 	}

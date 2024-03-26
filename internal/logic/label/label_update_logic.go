@@ -37,9 +37,6 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 	if label == nil {
 		return nil, errors.New("记录不存在")
 	}
-	if label.UserId != in.GetUserId() {
-		return nil, errors.New("此纪录不属于该用户")
-	}
 	if in.GetRecordState() != 0 {
 		label.RecordState = int8(in.GetRecordState())
 	}
@@ -60,6 +57,5 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 		Name:        label.Name,
 		Type:        label.Type,
 		ParentId:    label.ParentId,
-		UserId:      label.UserId,
 	}, nil
 }

@@ -14,7 +14,6 @@ type Label struct {
 	Name     string    `bson:"name,omitempty" json:"name,omitempty"`
 	Type     string    `bson:"type,omitempty" json:"type,omitempty"`
 	ParentId string    `bson:"parentId,omitempty" json:"parentId,omitempty"`
-	UserId   string    `bson:"userId,omitempty" json:"userId,omitempty"`
 	// 1:Created
 	// 2:Normal
 	// 3:Deleted

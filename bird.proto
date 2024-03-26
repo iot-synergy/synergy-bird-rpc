@@ -168,7 +168,6 @@ message LabelCreateReq{
   string name = 3;
   string type = 4;
   string parentId = 5;
-  string userId = 6;
 }
 
 message LabelUpdateReq{
@@ -181,11 +180,9 @@ message LabelUpdateReq{
   optional string name = 3;
   optional string type = 4;
   optional string parentId = 5;
-  optional string userId = 6;
 }
 
 message LabelListReq {
-  string userId = 1;
   string type = 2;
   string parentId = 3;
   uint64 page = 4;
@@ -203,7 +200,6 @@ message LabelResp{
   string name = 4;
   string type = 5;
   string parentId = 6;
-  string userId = 7;
 }
 
 message LabelListResp {
