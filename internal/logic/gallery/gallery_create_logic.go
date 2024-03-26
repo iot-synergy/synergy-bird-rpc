@@ -3,9 +3,9 @@ package gallery
 import (
 	"context"
 	"errors"
-	"synergy-bird-rpc/internal/svc"
-	model "synergy-bird-rpc/storage/gallery"
-	"synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	model "github.com/iot-synergy/synergy-bird-rpc/storage/gallery"
+	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"

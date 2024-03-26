@@ -6,11 +6,11 @@ package server
 import (
 	"context"
 
-	"synergy-bird-rpc/internal/logic/gallery"
-	"synergy-bird-rpc/internal/logic/illustration"
-	"synergy-bird-rpc/internal/logic/label"
-	"synergy-bird-rpc/internal/svc"
-	"synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/gallery"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/illustration"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/label"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 )
 
 type BirdServer struct {

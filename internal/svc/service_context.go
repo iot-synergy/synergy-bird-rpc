@@ -1,10 +1,10 @@
 package svc
 
 import (
-	"synergy-bird-rpc/internal/config"
-	model "synergy-bird-rpc/storage/gallery"
-	model2 "synergy-bird-rpc/storage/illustration"
-	model3 "synergy-bird-rpc/storage/label"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/config"
+	model "github.com/iot-synergy/synergy-bird-rpc/storage/gallery"
+	model2 "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
+	model3 "github.com/iot-synergy/synergy-bird-rpc/storage/label"
 )
 
 type ServiceContext struct {

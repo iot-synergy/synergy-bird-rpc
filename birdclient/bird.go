@@ -6,7 +6,7 @@ package birdclient
 import (
 	"context"
 
-	"synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

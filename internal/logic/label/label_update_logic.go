@@ -5,8 +5,8 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 
-	"synergy-bird-rpc/internal/svc"
-	"synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

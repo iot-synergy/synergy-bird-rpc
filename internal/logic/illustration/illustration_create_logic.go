@@ -2,11 +2,11 @@ package illustration
 
 import (
 	"context"
-	model "synergy-bird-rpc/storage/illustration"
+	model "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
 	"time"
 
-	"synergy-bird-rpc/internal/svc"
-	"synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"synergy-bird-rpc/internal/config"
-	"synergy-bird-rpc/internal/server"
-	"synergy-bird-rpc/internal/svc"
-	"synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/config"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/server"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
