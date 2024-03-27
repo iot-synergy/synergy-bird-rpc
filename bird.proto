@@ -96,16 +96,15 @@ message IllustrationsUpdateReq {
 
 message IllustrationsListReq {
   repeated string labels = 1;
-  string userId = 2;
-  string type = 3;
+  string type = 2;
   //1:Created
   //2:Normal
   //3:Deleted
   //4:Forbidden
-  int32 state = 4;
-  string keyword = 5;
-  uint64 page = 6;
-  uint64 pageSize = 7;
+  int32 state = 3;
+  string keyword = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
 }
 
 message FetchUserIllustrationReq {
