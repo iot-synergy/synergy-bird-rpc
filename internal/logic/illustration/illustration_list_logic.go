@@ -25,7 +25,7 @@ func NewIllustrationListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) (*bird.IllustrationsListResp, error) {
 	// todo: add your logic here and delete this line
-	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.Typee, in.Keyword, in.Page, in.PageSize)
+	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.Typee, in.Keyword, in.State, in.Page, in.PageSize)
 	if err != nil {
 		return &bird.IllustrationsListResp{
 			Results: nil,

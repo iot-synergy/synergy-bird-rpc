@@ -16,7 +16,7 @@ type (
 	IllustrationModel interface {
 		illustrationModel
 		FindListByParamAndPage(ctx context.Context, labels []string, typee, keyword string,
-			state int, page, pageSize uint64) (*[]Illustration, int64, error)
+			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 	}
 
 	customIllustrationModel struct {
@@ -33,7 +33,7 @@ func NewIllustrationModel(url, db, collection string) IllustrationModel {
 }
 
 func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, labels []string,
-	typee, keyword string, state int, page, pageSize uint64) (*[]Illustration, int64, error) {
+	typee, keyword string, state int32, page, pageSize uint64) (*[]Illustration, int64, error) {
 	data := make([]Illustration, 0)
 
 	filterDate := make(map[string]interface{}) //查询条件data
