@@ -54,6 +54,9 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 	if in.GetImagePath() != "" {
 		illustration.ImagePath = in.GetImagePath()
 	}
+	if in.GetIconPath() != "" {
+		illustration.IconPath = in.GetIconPath()
+	}
 	if in.MoreImages != nil && len(in.MoreImages) != 0 {
 		illustration.MoreImages = in.MoreImages
 	}
@@ -79,6 +82,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		Score:       illustration.Score,
 		WikiUrl:     illustration.WikiUrl,
 		ImagePath:   illustration.ImagePath,
+		IconPath:    illustration.IconPath,
 		MoreImages:  illustration.MoreImages,
 		Type:        illustration.Type,
 		Labels:      illustration.Labels,

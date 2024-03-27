@@ -69,10 +69,11 @@ message IllustrationsCreateReq {
   double score = 4;
   string wikiUrl = 5;
   string imagePath = 6;
-  repeated string moreImages = 7;
-  string type = 8;
-  repeated string labels = 9;
-  string description = 10;
+  string iconPath = 7;
+  repeated string moreImages = 8;
+  string type = 9;
+  repeated string labels = 10;
+  string description = 11;
 }
 
 message IllustrationsUpdateReq {
@@ -86,10 +87,11 @@ message IllustrationsUpdateReq {
   optional double score = 4;
   optional string wikiUrl = 5;
   optional string imagePath = 6;
-  repeated string moreImages = 7;
-  optional string type = 8;
-  repeated string labels = 9;
-  optional string description = 10;
+  optional string iconPath = 7;
+  repeated string moreImages = 8;
+  optional string type = 9;
+  repeated string labels = 10;
+  optional string description = 11;
 }
 
 message IllustrationsListReq {
@@ -132,10 +134,11 @@ message IllustrationsResp {
   double score = 5;
   string wikiUrl = 6;
   string imagePath = 7;
-  repeated string moreImages = 8;
-  string type = 9;
-  repeated string labels = 10;
-  string description = 11;
+  string iconPath = 8;
+  repeated string moreImages = 9;
+  string type = 10;
+  repeated string labels = 11;
+  string description = 12;
 }
 
 message IllustrationsListResp {

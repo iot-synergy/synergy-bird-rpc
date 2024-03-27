@@ -15,6 +15,7 @@ type Illustration struct {
 	Score       float64   `bson:"score,omitempty" json:"score,omitempty"`
 	WikiUrl     string    `bson:"wikiUrl,omitempty" json:"wikiUrl,omitempty"`
 	ImagePath   string    `bson:"imagePath,omitempty" json:"imagePath,omitempty"`
+	IconPath    string    `bson:"iconPath,omitempty" json:"iconPath,omitempty"`
 	MoreImages  []string  `bson:"moreImages,omitempty" json:"moreImages,omitempty"`
 	Type        string    `bson:"type,omitempty" json:"type,omitempty"`
 	Labels      []string  `bson:"labels,omitempty" json:"labels,omitempty"`

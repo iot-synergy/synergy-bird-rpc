@@ -44,6 +44,7 @@ func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) 
 			Score:       illustration.Score,
 			WikiUrl:     illustration.WikiUrl,
 			ImagePath:   illustration.ImagePath,
+			IconPath:    illustration.IconPath,
 			MoreImages:  illustration.MoreImages,
 			Type:        illustration.Type,
 			Labels:      illustration.Labels,
