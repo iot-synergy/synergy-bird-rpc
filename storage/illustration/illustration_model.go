@@ -16,7 +16,7 @@ type (
 	IllustrationModel interface {
 		illustrationModel
 		FindListByParamAndPage(ctx context.Context, labels []string, typee, keyword string,
-			page, pageSize uint64) (*[]Illustration, int64, error)
+			state int, page, pageSize uint64) (*[]Illustration, int64, error)
 	}
 
 	customIllustrationModel struct {
@@ -33,7 +33,7 @@ func NewIllustrationModel(url, db, collection string) IllustrationModel {
 }
 
 func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, labels []string,
-	typee, keyword string, page, pageSize uint64) (*[]Illustration, int64, error) {
+	typee, keyword string, state int, page, pageSize uint64) (*[]Illustration, int64, error) {
 	data := make([]Illustration, 0)
 
 	filterDate := make(map[string]interface{}) //查询条件data
@@ -59,8 +59,14 @@ func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, la
 		filterLabels["$in"] = labels
 		filterDate["labels"] = filterLabels
 	}
-	filterDate["type"] = typee
-	filterDate["recordState"] = 2
+	if typee != "" {
+		filterDate["type"] = typee
+	}
+	if state != 0 {
+		filterDate["recordState"] = state
+	} else {
+		filterDate["recordState"] = 2
+	}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
 		logx.Error(err.Error())
