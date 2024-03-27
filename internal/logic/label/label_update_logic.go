@@ -46,7 +46,11 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 	if in.GetTypee() != "" {
 		label.Type = in.GetTypee()
 	}
-	label.ParentId = in.GetParentId()
+	if in.GetParentId() != "" {
+		label.ParentId = in.GetParentId()
+	} else {
+		label.ParentId = "0"
+	}
 	l.svcCtx.LabelModel.Update(l.ctx, label)
 	return &bird.LabelResp{
 		Id:          label.ID.Hex(),
