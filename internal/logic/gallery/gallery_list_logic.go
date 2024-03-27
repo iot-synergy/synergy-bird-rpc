@@ -38,7 +38,7 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryLi
 	resps := make([]*bird.GalleryResp, 0)
 	for _, gallery := range *data {
 		resps = append(resps, &bird.GalleryResp{
-			Id:          gallery.ID.String(),
+			Id:          gallery.ID.Hex(),
 			RecordState: int32(gallery.RecordState),
 			CreateTime:  gallery.CreateAt.UnixMilli(),
 			Name:        gallery.Name,

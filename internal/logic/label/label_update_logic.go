@@ -51,7 +51,7 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 	}
 	l.svcCtx.LabelModel.Update(l.ctx, label)
 	return &bird.LabelResp{
-		Id:          label.ID.String(),
+		Id:          label.ID.Hex(),
 		RecordState: int32(label.RecordState),
 		CreateTime:  label.CreateAt.UnixMilli(),
 		Name:        label.Name,

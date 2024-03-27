@@ -54,7 +54,7 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 	}
 
 	return &bird.GalleryResp{
-		Id:          gallery.ID.String(),
+		Id:          gallery.ID.Hex(),
 		RecordState: int32(gallery.RecordState),
 		CreateTime:  gallery.CreateAt.UnixMilli(),
 		Name:        gallery.Name,

@@ -31,7 +31,7 @@ func (l *LabelListLogic) LabelList(in *bird.LabelListReq) (*bird.LabelListResp, 
 	resps := make([]*bird.LabelResp, 0)
 	for _, label := range *data {
 		resps = append(resps, &bird.LabelResp{
-			Id:          label.ID.String(),
+			Id:          label.ID.Hex(),
 			RecordState: int32(label.RecordState),
 			CreateTime:  label.CreateAt.UnixMilli(),
 			Name:        label.Name,

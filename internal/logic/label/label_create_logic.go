@@ -63,7 +63,7 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		return nil, err
 	}
 	return &bird.LabelResp{
-		Id:          data.ID.String(),
+		Id:          data.ID.Hex(),
 		RecordState: int32(data.RecordState),
 		CreateTime:  data.CreateAt.UnixMilli(),
 		Name:        data.Name,

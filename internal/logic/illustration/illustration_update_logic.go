@@ -75,7 +75,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		return nil, err
 	}
 	return &bird.IllustrationsResp{
-		Id:          illustration.ID.String(),
+		Id:          illustration.ID.Hex(),
 		RecordState: int32(illustration.RecordState),
 		CreateTime:  illustration.CreateAt.UnixMilli(),
 		Title:       illustration.Title,

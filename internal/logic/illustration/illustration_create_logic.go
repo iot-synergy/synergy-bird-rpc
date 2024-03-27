@@ -47,7 +47,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		return nil, err
 	}
 	return &bird.IllustrationsResp{
-		Id:          illustration.ID.String(),
+		Id:          illustration.ID.Hex(),
 		RecordState: int32(illustration.RecordState),
 		CreateTime:  illustration.CreateAt.UnixMilli(),
 		Title:       illustration.Title,

@@ -37,7 +37,7 @@ func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) 
 	resps := make([]*bird.IllustrationsResp, 0)
 	for _, illustration := range *data {
 		resps = append(resps, &bird.IllustrationsResp{
-			Id:          illustration.ID.String(),
+			Id:          illustration.ID.Hex(),
 			RecordState: int32(illustration.RecordState),
 			CreateTime:  illustration.CreateAt.UnixMilli(),
 			Title:       illustration.Title,

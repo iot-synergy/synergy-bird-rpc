@@ -65,7 +65,7 @@ func (l *GalleryUpdateLogic) GalleryUpdate(in *bird.GalleryUpdateReq) (*bird.Gal
 	_, err = l.svcCtx.GalleryModel.Update(l.ctx, gallery)
 
 	return &bird.GalleryResp{
-		Id:          in.Id,
+		Id:          gallery.ID.Hex(),
 		RecordState: int32(gallery.RecordState),
 		CreateTime:  gallery.CreateAt.UnixMilli(),
 		Name:        gallery.Name,
