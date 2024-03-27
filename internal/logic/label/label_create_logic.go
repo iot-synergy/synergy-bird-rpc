@@ -41,7 +41,7 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 			return nil, errors.New("父节点不是健康的")
 		}
 	}
-	label, err := l.svcCtx.LabelModel.FindRecord(l.ctx, in.Name, in.Type, in.ParentId)
+	label, err := l.svcCtx.LabelModel.FindRecord(l.ctx, in.Name, in.Typee, in.ParentId)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err
@@ -53,7 +53,7 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		UpdateAt:    time.Now(),
 		CreateAt:    time.Now(),
 		Name:        in.Name,
-		Type:        in.Type,
+		Type:        in.Typee,
 		ParentId:    in.ParentId,
 		RecordState: int8(in.RecordState),
 	}
@@ -67,7 +67,7 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		RecordState: int32(data.RecordState),
 		CreateTime:  data.CreateAt.UnixMilli(),
 		Name:        data.Name,
-		Type:        data.Type,
+		Typee:       data.Type,
 		ParentId:    data.ParentId,
 	}, nil
 }

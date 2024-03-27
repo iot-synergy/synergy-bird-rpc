@@ -36,7 +36,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		ImagePath:   in.ImagePath,
 		IconPath:    in.IconPath,
 		MoreImages:  in.MoreImages,
-		Type:        in.Type,
+		Type:        in.Typee,
 		Labels:      in.Labels,
 		Description: in.Description,
 		RecordState: int8(in.RecordState),
@@ -56,7 +56,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		ImagePath:   illustration.ImagePath,
 		IconPath:    illustration.IconPath,
 		MoreImages:  illustration.MoreImages,
-		Type:        illustration.Type,
+		Typee:       illustration.Type,
 		Labels:      illustration.Labels,
 		Description: illustration.Description,
 	}, nil

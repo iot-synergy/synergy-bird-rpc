@@ -71,7 +71,7 @@ message IllustrationsCreateReq {
   string imagePath = 6;
   string iconPath = 7;
   repeated string moreImages = 8;
-  string type = 9;
+  string typee = 9;
   repeated string labels = 10;
   string description = 11;
 }
@@ -89,14 +89,14 @@ message IllustrationsUpdateReq {
   optional string imagePath = 6;
   optional string iconPath = 7;
   repeated string moreImages = 8;
-  optional string type = 9;
+  optional string typee = 9;
   repeated string labels = 10;
   optional string description = 11;
 }
 
 message IllustrationsListReq {
   repeated string labels = 1;
-  string type = 2;
+  string typee = 2;
   //1:Created
   //2:Normal
   //3:Deleted
@@ -110,7 +110,7 @@ message IllustrationsListReq {
 message FetchUserIllustrationReq {
   repeated string labels = 1;
   string userId = 2;
-  string type = 3;
+  string typee = 3;
   //1:Created
   //2:Normal
   //3:Deleted
@@ -135,7 +135,7 @@ message IllustrationsResp {
   string imagePath = 7;
   string iconPath = 8;
   repeated string moreImages = 9;
-  string type = 10;
+  string typee = 10;
   repeated string labels = 11;
   string description = 12;
 }
@@ -149,7 +149,7 @@ message IllustrationsListResp {
 
 message FetchUserIllustrationResp {
   string userId = 1;
-  string type = 2;
+  string typee = 2;
   repeated string gainedIllustrations = 3;
   string id = 4;
   //1:Created
@@ -168,7 +168,7 @@ message LabelCreateReq{
   //4:Forbidden
   int32 recordState = 2;
   string name = 3;
-  string type = 4;
+  string typee = 4;
   string parentId = 5;
 }
 
@@ -180,12 +180,12 @@ message LabelUpdateReq{
   //4:Forbidden
   optional int32 recordState = 2;
   optional string name = 3;
-  optional string type = 4;
+  optional string typee = 4;
   optional string parentId = 5;
 }
 
 message LabelListReq {
-  string type = 2;
+  string typee = 2;
   string parentId = 3;
   uint64 page = 4;
   uint64 pageSize = 5;
@@ -200,7 +200,7 @@ message LabelResp{
   int32 recordState = 2;
   int64 createTime = 3;
   string name = 4;
-  string type = 5;
+  string typee = 5;
   string parentId = 6;
 }
 

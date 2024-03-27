@@ -43,8 +43,8 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 	if in.GetName() != "" {
 		label.Name = in.GetName()
 	}
-	if in.GetType() != "" {
-		label.Type = in.GetType()
+	if in.GetTypee() != "" {
+		label.Type = in.GetTypee()
 	}
 	if in.GetParentId() != "" {
 		label.ParentId = in.GetParentId()
@@ -55,7 +55,7 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 		RecordState: int32(label.RecordState),
 		CreateTime:  label.CreateAt.UnixMilli(),
 		Name:        label.Name,
-		Type:        label.Type,
+		Typee:       label.Type,
 		ParentId:    label.ParentId,
 	}, nil
 }

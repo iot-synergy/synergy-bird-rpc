@@ -24,7 +24,7 @@ func NewLabelListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LabelLi
 }
 
 func (l *LabelListLogic) LabelList(in *bird.LabelListReq) (*bird.LabelListResp, error) {
-	data, count, err := l.svcCtx.LabelModel.FindListByParamAndPage(l.ctx, in.Type, in.ParentId, in.Page, in.PageSize)
+	data, count, err := l.svcCtx.LabelModel.FindListByParamAndPage(l.ctx, in.Typee, in.ParentId, in.Page, in.PageSize)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (l *LabelListLogic) LabelList(in *bird.LabelListReq) (*bird.LabelListResp, 
 			RecordState: int32(label.RecordState),
 			CreateTime:  label.CreateAt.UnixMilli(),
 			Name:        label.Name,
-			Type:        label.Type,
+			Typee:       label.Type,
 			ParentId:    label.ParentId,
 		})
 	}

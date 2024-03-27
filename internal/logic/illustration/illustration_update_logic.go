@@ -60,8 +60,8 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 	if in.MoreImages != nil && len(in.MoreImages) != 0 {
 		illustration.MoreImages = in.MoreImages
 	}
-	if in.GetType() != "" {
-		illustration.Type = in.GetType()
+	if in.GetTypee() != "" {
+		illustration.Type = in.GetTypee()
 	}
 	if in.Labels != nil && len(in.Labels) != 0 {
 		illustration.Labels = in.Labels
@@ -84,7 +84,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		ImagePath:   illustration.ImagePath,
 		IconPath:    illustration.IconPath,
 		MoreImages:  illustration.MoreImages,
-		Type:        illustration.Type,
+		Typee:       illustration.Type,
 		Labels:      illustration.Labels,
 		Description: illustration.Description,
 	}, nil
