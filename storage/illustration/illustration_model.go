@@ -64,8 +64,6 @@ func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, la
 	}
 	if state != 0 {
 		filterDate["recordState"] = state
-	} else {
-		filterDate["recordState"] = 2
 	}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
