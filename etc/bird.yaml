@@ -15,3 +15,8 @@ Log:
 MonDb:
   Url: mongodb://192.168.200.128:27017
   DbName: peckperk
+
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: bird.rpc

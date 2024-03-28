@@ -54,9 +54,9 @@ func (s *BirdServer) IllustrationList(ctx context.Context, in *bird.Illustration
 	return l.IllustrationList(in)
 }
 
-func (s *BirdServer) FetchUserIllustration(ctx context.Context, in *bird.FetchUserIllustrationReq) (*bird.FetchUserIllustrationResp, error) {
-	l := illustration.NewFetchUserIllustrationLogic(ctx, s.svcCtx)
-	return l.FetchUserIllustration(in)
+func (s *BirdServer) FindIllustrationByPage(ctx context.Context, in *bird.IllustrationsListReq) (*bird.IllustrationsListVo, error) {
+	l := illustration.NewFindIllustrationByPageLogic(ctx, s.svcCtx)
+	return l.FindIllustrationByPage(in)
 }
 
 func (s *BirdServer) LabelCreate(ctx context.Context, in *bird.LabelCreateReq) (*bird.LabelResp, error) {
@@ -72,4 +72,14 @@ func (s *BirdServer) LabelUpdate(ctx context.Context, in *bird.LabelUpdateReq) (
 func (s *BirdServer) LabelList(ctx context.Context, in *bird.LabelListReq) (*bird.LabelListResp, error) {
 	l := label.NewLabelListLogic(ctx, s.svcCtx)
 	return l.LabelList(in)
+}
+
+func (s *BirdServer) FindLabelByPage(ctx context.Context, in *bird.LabelListReq) (*bird.LabelListVo, error) {
+	l := label.NewFindLabelByPageLogic(ctx, s.svcCtx)
+	return l.FindLabelByPage(in)
+}
+
+func (s *BirdServer) FindLabelById(ctx context.Context, in *bird.IdReq) (*bird.LabelVo, error) {
+	l := label.NewFindLabelByIdLogic(ctx, s.svcCtx)
+	return l.FindLabelById(in)
 }

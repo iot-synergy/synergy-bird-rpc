@@ -73,6 +73,10 @@ else
 endif
 	@echo "Generate RPC codes successfully"
 
+.PHONY: gen-pb
+gen-pb:
+	protoc --descriptor_set_out=./$(SERVICE_STYLE).pb ./$(SERVICE_STYLE).proto
+
 .PHONY: gen-mongo
 gen-mongo: # 生成mongo的代码
 	goctl model mongo --type gallery --dir ./storage/gallery --style=$(PROJECT_STYLE)

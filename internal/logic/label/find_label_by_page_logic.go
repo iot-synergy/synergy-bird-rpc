@@ -9,24 +9,28 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type LabelListLogic struct {
+type FindLabelByPageLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewLabelListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LabelListLogic {
-	return &LabelListLogic{
+func NewFindLabelByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindLabelByPageLogic {
+	return &FindLabelByPageLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *LabelListLogic) LabelList(in *bird.LabelListReq) (*bird.LabelListResp, error) {
+func (l *FindLabelByPageLogic) FindLabelByPage(in *bird.LabelListReq) (*bird.LabelListVo, error) {
 	data, count, err := l.svcCtx.LabelModel.FindListByParamAndPage(l.ctx, in.GetTypee(), in.GetParentId(), in.Page, in.PageSize, in.GetRecordState())
 	if err != nil {
-		return nil, err
+		return &bird.LabelListVo{
+			Code:    -1,
+			Message: "读取失败",
+			Data:    nil,
+		}, err
 	}
 	resps := make([]*bird.LabelResp, 0)
 	for _, label := range *data {
@@ -39,10 +43,12 @@ func (l *LabelListLogic) LabelList(in *bird.LabelListReq) (*bird.LabelListResp, 
 			ParentId:    label.ParentId,
 		})
 	}
-	return &bird.LabelListResp{
-		Results: resps,
-		Total:   count,
+	return &bird.LabelListVo{
 		Code:    0,
 		Message: "成功",
+		Data: &bird.LabelListVoData{
+			Total: count,
+			Data:  resps,
+		},
 	}, nil
 }

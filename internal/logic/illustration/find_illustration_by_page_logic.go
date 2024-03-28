@@ -9,26 +9,24 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type IllustrationListLogic struct {
+type FindIllustrationByPageLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewIllustrationListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IllustrationListLogic {
-	return &IllustrationListLogic{
+func NewFindIllustrationByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindIllustrationByPageLogic {
+	return &FindIllustrationByPageLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) (*bird.IllustrationsListResp, error) {
+func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsListReq) (*bird.IllustrationsListVo, error) {
 	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), in.GetState(), in.Page, in.PageSize)
 	if err != nil {
-		return &bird.IllustrationsListResp{
-			Results: nil,
-			Total:   0,
+		return &bird.IllustrationsListVo{
 			Code:    -1,
 			Message: err.Error(),
 		}, err
@@ -50,10 +48,12 @@ func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) 
 			Description: illustration.Description,
 		})
 	}
-	return &bird.IllustrationsListResp{
-		Results: resps,
-		Total:   count,
+	return &bird.IllustrationsListVo{
 		Code:    0,
 		Message: "成功",
+		Data: &bird.IllustrationsListVoData{
+			Total: count,
+			Data:  resps,
+		},
 	}, nil
 }

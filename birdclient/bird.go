@@ -13,23 +13,27 @@ import (
 )
 
 type (
-	FetchUserIllustrationReq  = bird.FetchUserIllustrationReq
-	FetchUserIllustrationResp = bird.FetchUserIllustrationResp
-	GalleryCreateReq          = bird.GalleryCreateReq
-	GalleryListReq            = bird.GalleryListReq
-	GalleryListResp           = bird.GalleryListResp
-	GalleryResp               = bird.GalleryResp
-	GalleryUpdateReq          = bird.GalleryUpdateReq
-	IllustrationsCreateReq    = bird.IllustrationsCreateReq
-	IllustrationsListReq      = bird.IllustrationsListReq
-	IllustrationsListResp     = bird.IllustrationsListResp
-	IllustrationsResp         = bird.IllustrationsResp
-	IllustrationsUpdateReq    = bird.IllustrationsUpdateReq
-	LabelCreateReq            = bird.LabelCreateReq
-	LabelListReq              = bird.LabelListReq
-	LabelListResp             = bird.LabelListResp
-	LabelResp                 = bird.LabelResp
-	LabelUpdateReq            = bird.LabelUpdateReq
+	GalleryCreateReq        = bird.GalleryCreateReq
+	GalleryListReq          = bird.GalleryListReq
+	GalleryListResp         = bird.GalleryListResp
+	GalleryResp             = bird.GalleryResp
+	GalleryUpdateReq        = bird.GalleryUpdateReq
+	IdReq                   = bird.IdReq
+	IllustrationsCreateReq  = bird.IllustrationsCreateReq
+	IllustrationsListReq    = bird.IllustrationsListReq
+	IllustrationsListResp   = bird.IllustrationsListResp
+	IllustrationsListVo     = bird.IllustrationsListVo
+	IllustrationsListVoData = bird.IllustrationsListVoData
+	IllustrationsResp       = bird.IllustrationsResp
+	IllustrationsUpdateReq  = bird.IllustrationsUpdateReq
+	LabelCreateReq          = bird.LabelCreateReq
+	LabelListReq            = bird.LabelListReq
+	LabelListResp           = bird.LabelListResp
+	LabelListVo             = bird.LabelListVo
+	LabelListVoData         = bird.LabelListVoData
+	LabelResp               = bird.LabelResp
+	LabelUpdateReq          = bird.LabelUpdateReq
+	LabelVo                 = bird.LabelVo
 
 	Bird interface {
 		GalleryCreate(ctx context.Context, in *GalleryCreateReq, opts ...grpc.CallOption) (*GalleryResp, error)
@@ -38,10 +42,12 @@ type (
 		IllustrationCreate(ctx context.Context, in *IllustrationsCreateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		IllustrationUpdate(ctx context.Context, in *IllustrationsUpdateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		IllustrationList(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListResp, error)
-		FetchUserIllustration(ctx context.Context, in *FetchUserIllustrationReq, opts ...grpc.CallOption) (*FetchUserIllustrationResp, error)
+		FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
 		LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error)
 		LabelUpdate(ctx context.Context, in *LabelUpdateReq, opts ...grpc.CallOption) (*LabelResp, error)
 		LabelList(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListResp, error)
+		FindLabelByPage(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListVo, error)
+		FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error)
 	}
 
 	defaultBird struct {
@@ -85,9 +91,9 @@ func (m *defaultBird) IllustrationList(ctx context.Context, in *IllustrationsLis
 	return client.IllustrationList(ctx, in, opts...)
 }
 
-func (m *defaultBird) FetchUserIllustration(ctx context.Context, in *FetchUserIllustrationReq, opts ...grpc.CallOption) (*FetchUserIllustrationResp, error) {
+func (m *defaultBird) FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
-	return client.FetchUserIllustration(ctx, in, opts...)
+	return client.FindIllustrationByPage(ctx, in, opts...)
 }
 
 func (m *defaultBird) LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error) {
@@ -103,4 +109,14 @@ func (m *defaultBird) LabelUpdate(ctx context.Context, in *LabelUpdateReq, opts 
 func (m *defaultBird) LabelList(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListResp, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.LabelList(ctx, in, opts...)
+}
+
+func (m *defaultBird) FindLabelByPage(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListVo, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.FindLabelByPage(ctx, in, opts...)
+}
+
+func (m *defaultBird) FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.FindLabelById(ctx, in, opts...)
 }

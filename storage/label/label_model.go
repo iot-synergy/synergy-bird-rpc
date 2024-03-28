@@ -16,7 +16,7 @@ type (
 	LabelModel interface {
 		labelModel
 		FindRecord(ctx context.Context, name, typee, parentId string) (*Label, error)
-		FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64,
+		FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64, recordState int32,
 		) (*[]Label, int64, error)
 	}
 
@@ -70,7 +70,7 @@ func (m *customLabelModel) FindRecord(ctx context.Context, name, typee, parentId
 	}
 }
 
-func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64,
+func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64, recordState int32,
 ) (*[]Label, int64, error) {
 	data := make([]Label, 0)
 
@@ -81,7 +81,9 @@ func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, typee, pa
 	if parentId != "" {
 		filterDate["parentId"] = parentId
 	}
-	filterDate["recordState"] = 2
+	if recordState != 0 {
+		filterDate["recordState"] = recordState
+	}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
 		logx.Error(err.Error())

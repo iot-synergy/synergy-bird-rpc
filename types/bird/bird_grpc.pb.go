@@ -19,16 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bird_GalleryCreate_FullMethodName         = "/bird.bird/galleryCreate"
-	Bird_GalleryUpdate_FullMethodName         = "/bird.bird/galleryUpdate"
-	Bird_GalleryList_FullMethodName           = "/bird.bird/galleryList"
-	Bird_IllustrationCreate_FullMethodName    = "/bird.bird/illustrationCreate"
-	Bird_IllustrationUpdate_FullMethodName    = "/bird.bird/illustrationUpdate"
-	Bird_IllustrationList_FullMethodName      = "/bird.bird/illustrationList"
-	Bird_FetchUserIllustration_FullMethodName = "/bird.bird/fetchUserIllustration"
-	Bird_LabelCreate_FullMethodName           = "/bird.bird/labelCreate"
-	Bird_LabelUpdate_FullMethodName           = "/bird.bird/labelUpdate"
-	Bird_LabelList_FullMethodName             = "/bird.bird/labelList"
+	Bird_GalleryCreate_FullMethodName          = "/bird.bird/galleryCreate"
+	Bird_GalleryUpdate_FullMethodName          = "/bird.bird/galleryUpdate"
+	Bird_GalleryList_FullMethodName            = "/bird.bird/galleryList"
+	Bird_IllustrationCreate_FullMethodName     = "/bird.bird/illustrationCreate"
+	Bird_IllustrationUpdate_FullMethodName     = "/bird.bird/illustrationUpdate"
+	Bird_IllustrationList_FullMethodName       = "/bird.bird/illustrationList"
+	Bird_FindIllustrationByPage_FullMethodName = "/bird.bird/findIllustrationByPage"
+	Bird_LabelCreate_FullMethodName            = "/bird.bird/labelCreate"
+	Bird_LabelUpdate_FullMethodName            = "/bird.bird/labelUpdate"
+	Bird_LabelList_FullMethodName              = "/bird.bird/labelList"
+	Bird_FindLabelByPage_FullMethodName        = "/bird.bird/findLabelByPage"
+	Bird_FindLabelById_FullMethodName          = "/bird.bird/findLabelById"
 )
 
 // BirdClient is the client API for Bird service.
@@ -48,13 +50,17 @@ type BirdClient interface {
 	// group: illustration
 	IllustrationList(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListResp, error)
 	// group: illustration
-	FetchUserIllustration(ctx context.Context, in *FetchUserIllustrationReq, opts ...grpc.CallOption) (*FetchUserIllustrationResp, error)
+	FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
 	// group: label
 	LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error)
 	// group: label
 	LabelUpdate(ctx context.Context, in *LabelUpdateReq, opts ...grpc.CallOption) (*LabelResp, error)
 	// group: label
 	LabelList(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListResp, error)
+	// group: label
+	FindLabelByPage(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListVo, error)
+	// group: label
+	FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error)
 }
 
 type birdClient struct {
@@ -119,9 +125,9 @@ func (c *birdClient) IllustrationList(ctx context.Context, in *IllustrationsList
 	return out, nil
 }
 
-func (c *birdClient) FetchUserIllustration(ctx context.Context, in *FetchUserIllustrationReq, opts ...grpc.CallOption) (*FetchUserIllustrationResp, error) {
-	out := new(FetchUserIllustrationResp)
-	err := c.cc.Invoke(ctx, Bird_FetchUserIllustration_FullMethodName, in, out, opts...)
+func (c *birdClient) FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error) {
+	out := new(IllustrationsListVo)
+	err := c.cc.Invoke(ctx, Bird_FindIllustrationByPage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -155,6 +161,24 @@ func (c *birdClient) LabelList(ctx context.Context, in *LabelListReq, opts ...gr
 	return out, nil
 }
 
+func (c *birdClient) FindLabelByPage(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListVo, error) {
+	out := new(LabelListVo)
+	err := c.cc.Invoke(ctx, Bird_FindLabelByPage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error) {
+	out := new(LabelVo)
+	err := c.cc.Invoke(ctx, Bird_FindLabelById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BirdServer is the server API for Bird service.
 // All implementations must embed UnimplementedBirdServer
 // for forward compatibility
@@ -172,13 +196,17 @@ type BirdServer interface {
 	// group: illustration
 	IllustrationList(context.Context, *IllustrationsListReq) (*IllustrationsListResp, error)
 	// group: illustration
-	FetchUserIllustration(context.Context, *FetchUserIllustrationReq) (*FetchUserIllustrationResp, error)
+	FindIllustrationByPage(context.Context, *IllustrationsListReq) (*IllustrationsListVo, error)
 	// group: label
 	LabelCreate(context.Context, *LabelCreateReq) (*LabelResp, error)
 	// group: label
 	LabelUpdate(context.Context, *LabelUpdateReq) (*LabelResp, error)
 	// group: label
 	LabelList(context.Context, *LabelListReq) (*LabelListResp, error)
+	// group: label
+	FindLabelByPage(context.Context, *LabelListReq) (*LabelListVo, error)
+	// group: label
+	FindLabelById(context.Context, *IdReq) (*LabelVo, error)
 	mustEmbedUnimplementedBirdServer()
 }
 
@@ -204,8 +232,8 @@ func (UnimplementedBirdServer) IllustrationUpdate(context.Context, *Illustration
 func (UnimplementedBirdServer) IllustrationList(context.Context, *IllustrationsListReq) (*IllustrationsListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IllustrationList not implemented")
 }
-func (UnimplementedBirdServer) FetchUserIllustration(context.Context, *FetchUserIllustrationReq) (*FetchUserIllustrationResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FetchUserIllustration not implemented")
+func (UnimplementedBirdServer) FindIllustrationByPage(context.Context, *IllustrationsListReq) (*IllustrationsListVo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindIllustrationByPage not implemented")
 }
 func (UnimplementedBirdServer) LabelCreate(context.Context, *LabelCreateReq) (*LabelResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LabelCreate not implemented")
@@ -215,6 +243,12 @@ func (UnimplementedBirdServer) LabelUpdate(context.Context, *LabelUpdateReq) (*L
 }
 func (UnimplementedBirdServer) LabelList(context.Context, *LabelListReq) (*LabelListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LabelList not implemented")
+}
+func (UnimplementedBirdServer) FindLabelByPage(context.Context, *LabelListReq) (*LabelListVo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindLabelByPage not implemented")
+}
+func (UnimplementedBirdServer) FindLabelById(context.Context, *IdReq) (*LabelVo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindLabelById not implemented")
 }
 func (UnimplementedBirdServer) mustEmbedUnimplementedBirdServer() {}
 
@@ -337,20 +371,20 @@ func _Bird_IllustrationList_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bird_FetchUserIllustration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FetchUserIllustrationReq)
+func _Bird_FindIllustrationByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IllustrationsListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BirdServer).FetchUserIllustration(ctx, in)
+		return srv.(BirdServer).FindIllustrationByPage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bird_FetchUserIllustration_FullMethodName,
+		FullMethod: Bird_FindIllustrationByPage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BirdServer).FetchUserIllustration(ctx, req.(*FetchUserIllustrationReq))
+		return srv.(BirdServer).FindIllustrationByPage(ctx, req.(*IllustrationsListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -409,6 +443,42 @@ func _Bird_LabelList_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bird_FindLabelByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LabelListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).FindLabelByPage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_FindLabelByPage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).FindLabelByPage(ctx, req.(*LabelListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_FindLabelById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).FindLabelById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_FindLabelById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).FindLabelById(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Bird_ServiceDesc is the grpc.ServiceDesc for Bird service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -441,8 +511,8 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bird_IllustrationList_Handler,
 		},
 		{
-			MethodName: "fetchUserIllustration",
-			Handler:    _Bird_FetchUserIllustration_Handler,
+			MethodName: "findIllustrationByPage",
+			Handler:    _Bird_FindIllustrationByPage_Handler,
 		},
 		{
 			MethodName: "labelCreate",
@@ -455,6 +525,14 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "labelList",
 			Handler:    _Bird_LabelList_Handler,
+		},
+		{
+			MethodName: "findLabelByPage",
+			Handler:    _Bird_FindLabelByPage_Handler,
+		},
+		{
+			MethodName: "findLabelById",
+			Handler:    _Bird_FindLabelById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

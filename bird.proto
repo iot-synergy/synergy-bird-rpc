@@ -3,6 +3,10 @@ syntax = "proto3";
 package bird;
 option go_package = "./bird";
 
+message IdReq {
+  string id = 1;
+}
+
 message GalleryCreateReq {
   optional string id = 1;
   //1:Created
@@ -96,30 +100,17 @@ message IllustrationsUpdateReq {
 
 message IllustrationsListReq {
   repeated string labels = 1;
-  string typee = 2;
+  optional string typee = 2;
   //1:Created
   //2:Normal
   //3:Deleted
   //4:Forbidden
-  int32 state = 3;
-  string keyword = 4;
+  optional int32 state = 3;
+  optional string keyword = 4;
   uint64 page = 5;
   uint64 pageSize = 6;
 }
 
-message FetchUserIllustrationReq {
-  repeated string labels = 1;
-  string userId = 2;
-  string typee = 3;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 state = 4;
-  string keyword = 5;
-  uint64 page = 6;
-  uint64 pageSize = 7;
-}
 
 message IllustrationsResp {
   string id = 1;
@@ -147,17 +138,15 @@ message IllustrationsListResp {
   string message = 4;
 }
 
-message FetchUserIllustrationResp {
-  string userId = 1;
-  string typee = 2;
-  repeated string gainedIllustrations = 3;
-  string id = 4;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 recordState = 5;
-  int64 createTime = 6;
+message IllustrationsListVo {
+  int64 code = 1;
+  string message = 2;
+  IllustrationsListVoData Data = 3;
+}
+
+message IllustrationsListVoData {
+  int64 total = 1;
+  repeated IllustrationsResp Data = 2;
 }
 
 message LabelCreateReq{
@@ -185,10 +174,12 @@ message LabelUpdateReq{
 }
 
 message LabelListReq {
-  string typee = 2;
-  string parentId = 3;
+  optional string typee = 2;
+  optional string parentId = 3;
   uint64 page = 4;
   uint64 pageSize = 5;
+  optional string name = 6;
+  optional int32 recordState = 7;
 }
 
 message LabelResp{
@@ -211,6 +202,23 @@ message LabelListResp {
   string message = 4;
 }
 
+message LabelListVo {
+  int64 code = 1;
+  string message = 2;
+  LabelListVoData data = 3;
+}
+
+message LabelListVoData {
+  int64 total = 1;
+  repeated LabelResp data = 2;
+}
+
+message LabelVo {
+  int64 code = 1;
+  string message = 2;
+  LabelResp data = 3;
+}
+
 service bird {
   //  group: gallery
   rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
@@ -225,11 +233,15 @@ service bird {
   //  group: illustration
   rpc illustrationList(IllustrationsListReq) returns (IllustrationsListResp);
   //  group: illustration
-  rpc fetchUserIllustration(FetchUserIllustrationReq) returns (FetchUserIllustrationResp);
+  rpc findIllustrationByPage(IllustrationsListReq) returns (IllustrationsListVo);
   //  group: label
   rpc labelCreate(LabelCreateReq) returns (LabelResp);
   //  group: label
   rpc labelUpdate(LabelUpdateReq) returns (LabelResp);
   //  group: label
   rpc labelList(LabelListReq) returns (LabelListResp);
+  //  group: label
+  rpc findLabelByPage(LabelListReq) returns (LabelListVo);
+  //  group: label
+  rpc findLabelById (IdReq) returns (LabelVo);
 }
