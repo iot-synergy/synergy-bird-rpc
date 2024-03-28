@@ -28,7 +28,7 @@ func NewLabelCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Label
 }
 
 func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp, error) {
-	if in.ParentId != "" {
+	if in.ParentId != "" && in.ParentId != "0" {
 		parent, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.ParentId)
 		if err != nil && !errors.Is(err, mon.ErrNotFound) {
 			logx.Error(err.Error())
@@ -40,6 +40,8 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		if parent.RecordState != 2 {
 			return nil, errors.New("父节点不是健康的")
 		}
+	} else if in.ParentId == "" {
+		in.ParentId = "0"
 	}
 	label, err := l.svcCtx.LabelModel.FindRecord(l.ctx, in.Name, in.Typee, in.ParentId)
 	if err != nil {
