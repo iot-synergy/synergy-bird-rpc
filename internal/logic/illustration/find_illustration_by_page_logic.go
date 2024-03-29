@@ -2,6 +2,8 @@ package illustration
 
 import (
 	"context"
+	"errors"
+	"github.com/zeromicro/go-zero/core/stores/mon"
 
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
@@ -31,9 +33,23 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			Message: err.Error(),
 		}, err
 	}
-	resps := make([]*bird.IllustrationsResp, 0)
+	resps := make([]*bird.IllustrationsRespVo, 0)
 	for _, illustration := range *data {
-		resps = append(resps, &bird.IllustrationsResp{
+		labelResps := make([]*bird.LabelResp, 0)
+		for _, label := range illustration.Labels {
+			labelData, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
+			if err == nil || errors.Is(err, mon.ErrNotFound) {
+				labelResps = append(labelResps, &bird.LabelResp{
+					Id:          labelData.ID.Hex(),
+					RecordState: int32(labelData.RecordState),
+					CreateTime:  labelData.CreateAt.UnixMilli(),
+					Name:        labelData.Name,
+					Typee:       labelData.Type,
+					ParentId:    labelData.ParentId,
+				})
+			}
+		}
+		resps = append(resps, &bird.IllustrationsRespVo{
 			Id:          illustration.ID.Hex(),
 			RecordState: int32(illustration.RecordState),
 			CreateTime:  illustration.CreateAt.UnixMilli(),
@@ -44,7 +60,7 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			IconPath:    illustration.IconPath,
 			MoreImages:  illustration.MoreImages,
 			Typee:       illustration.Type,
-			Labels:      illustration.Labels,
+			Labels:      labelResps,
 			Description: illustration.Description,
 		})
 	}

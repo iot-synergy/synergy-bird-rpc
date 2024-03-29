@@ -131,8 +131,27 @@ message IllustrationsResp {
   string description = 12;
 }
 
+message IllustrationsRespVo {
+  string id = 1;
+  //1:Created
+  //2:Normal
+  //3:Deleted
+  //4:Forbidden
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string title = 4;
+  double score = 5;
+  string wikiUrl = 6;
+  string imagePath = 7;
+  string iconPath = 8;
+  repeated string moreImages = 9;
+  string typee = 10;
+  repeated LabelResp labels = 11;
+  string description = 12;
+}
+
 message IllustrationsListResp {
-  repeated IllustrationsResp results = 1;
+  repeated IllustrationsRespVo results = 1;
   int64 total = 2;
   int64 code = 3;
   string message = 4;
@@ -146,7 +165,7 @@ message IllustrationsListVo {
 
 message IllustrationsListVoData {
   int64 total = 1;
-  repeated IllustrationsResp Data = 2;
+  repeated IllustrationsRespVo Data = 2;
 }
 
 message LabelCreateReq{

@@ -64,7 +64,12 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		illustration.Type = in.GetTypee()
 	}
 	if in.Labels != nil && len(in.Labels) != 0 {
-		illustration.Labels = in.Labels
+		for _, label := range in.Labels {
+			label, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
+			if err == nil || errors.Is(err, mon.ErrNotFound) {
+				illustration.Labels = append(illustration.Labels, label.ID.Hex())
+			}
+		}
 	}
 	if in.GetDescription() != "" {
 		illustration.Description = in.GetDescription()

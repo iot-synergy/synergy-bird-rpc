@@ -25,6 +25,7 @@ type (
 	IllustrationsListVo     = bird.IllustrationsListVo
 	IllustrationsListVoData = bird.IllustrationsListVoData
 	IllustrationsResp       = bird.IllustrationsResp
+	IllustrationsRespVo     = bird.IllustrationsRespVo
 	IllustrationsUpdateReq  = bird.IllustrationsUpdateReq
 	LabelCreateReq          = bird.LabelCreateReq
 	LabelListReq            = bird.LabelListReq
