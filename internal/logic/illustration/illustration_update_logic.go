@@ -67,7 +67,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		illustration.Labels = make([]string, 0)
 		for _, label := range in.Labels {
 			label, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
-			if err == nil || errors.Is(err, mon.ErrNotFound) {
+			if (err == nil || errors.Is(err, mon.ErrNotFound)) && label.RecordState == 2 {
 				illustration.Labels = append(illustration.Labels, label.ID.Hex())
 			}
 		}

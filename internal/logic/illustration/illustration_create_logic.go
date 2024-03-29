@@ -28,7 +28,6 @@ func NewIllustrationCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreateReq) (*bird.IllustrationsResp, error) {
-	// todo: add your logic here and delete this line
 	illustration := model.Illustration{
 		UpdateAt:    time.Time{},
 		CreateAt:    time.Time{},
@@ -45,7 +44,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 	}
 	for _, label := range in.Labels {
 		label, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
-		if err == nil || errors.Is(err, mon.ErrNotFound) {
+		if (err == nil || errors.Is(err, mon.ErrNotFound)) && label.RecordState == 2 {
 			illustration.Labels = append(illustration.Labels, label.ID.Hex())
 		}
 	}
