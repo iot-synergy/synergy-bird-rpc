@@ -27,7 +27,6 @@ func NewIllustrationUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdateReq) (*bird.IllustrationsResp, error) {
-	// todo: add your logic here and delete this line
 	illustration, err := l.svcCtx.IllustrationModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
@@ -60,15 +59,16 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 	if in.GetTypee() != "" {
 		illustration.Type = in.GetTypee()
 	}
-	if in.Labels != nil && len(in.Labels) != 0 {
-		illustration.Labels = make([]string, 0)
-		for _, label := range in.Labels {
-			label, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
-			if (err == nil || errors.Is(err, mon.ErrNotFound)) && label.RecordState == 2 {
-				illustration.Labels = append(illustration.Labels, label.ID.Hex())
-			}
-		}
+	labels, err := l.svcCtx.LabelModel.FindListByIds(l.ctx, in.Labels)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
 	}
+	labelIds := make([]string, 0)
+	for _, label := range *labels {
+		labelIds = append(labelIds, label.ID.Hex())
+	}
+	illustration.Labels = labelIds
 	if in.GetDescription() != "" {
 		illustration.Description = in.GetDescription()
 	}

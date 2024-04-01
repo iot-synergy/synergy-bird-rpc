@@ -2,9 +2,7 @@ package illustration
 
 import (
 	"context"
-	"errors"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
-	"github.com/zeromicro/go-zero/core/stores/mon"
 	"time"
 
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
@@ -42,13 +40,15 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		Description: in.Description,
 		RecordState: 1,
 	}
-	for _, label := range in.Labels {
-		label, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
-		if (err == nil || errors.Is(err, mon.ErrNotFound)) && label.RecordState == 2 {
-			illustration.Labels = append(illustration.Labels, label.ID.Hex())
-		}
+	labels, err := l.svcCtx.LabelModel.FindListByIds(l.ctx, in.Labels)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
 	}
-	err := l.svcCtx.IllustrationModel.Insert(l.ctx, &illustration)
+	for _, label := range *labels {
+		illustration.Labels = append(illustration.Labels, label.ID.Hex())
+	}
+	err = l.svcCtx.IllustrationModel.Insert(l.ctx, &illustration)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err

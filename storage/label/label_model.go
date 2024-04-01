@@ -18,6 +18,7 @@ type (
 		FindRecord(ctx context.Context, name, typee, parentId string) (*Label, error)
 		FindListByParamAndPage(ctx context.Context, typee, parentId string, page, pageSize uint64, recordState int32,
 		) (*[]Label, int64, error)
+		FindListByIds(ctx context.Context, ids []string) (*[]Label, error)
 	}
 
 	customLabelModel struct {
@@ -108,4 +109,20 @@ func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, typee, pa
 	findoptions.SetSort(bson.D{bson.E{"updateAt", -1}})
 	m.conn.Find(ctx, &data, filter, findoptions)
 	return &data, count, nil
+}
+
+func (m *customLabelModel) FindListByIds(ctx context.Context, ids []string) (*[]Label, error) {
+	data := make([]Label, 0)
+	filterDate := make(map[string]interface{}) //查询条件data
+	filterDate["recordState"] = 2
+	filterDate["_id"] = bson.M{"$in": ids}
+	marshal, err := bson.Marshal(filterDate)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	filter := bson.M{} //查询条件
+	err = bson.Unmarshal(marshal, filter)
+	m.conn.Find(ctx, &data, filter)
+	return &data, nil
 }

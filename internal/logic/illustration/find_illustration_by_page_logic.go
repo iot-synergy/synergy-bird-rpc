@@ -2,10 +2,8 @@ package illustration
 
 import (
 	"context"
-	"errors"
-	"github.com/zeromicro/go-zero/core/stores/mon"
-
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	model "github.com/iot-synergy/synergy-bird-rpc/storage/label"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,19 +31,41 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			Message: err.Error(),
 		}, err
 	}
-	resps := make([]*bird.IllustrationsRespVo, 0)
+	//获得去重的标签id
+	labelIdMap := make(map[string]string)
+	labelIds := make([]string, 0)
 	for _, illustration := range *data {
-		labelResps := make([]*bird.LabelResp, 0)
 		for _, label := range illustration.Labels {
-			labelData, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)
-			if (err == nil || errors.Is(err, mon.ErrNotFound)) && labelData.RecordState == 2 {
+			labelIdMap[label] = ""
+		}
+	}
+	for key, _ := range labelIdMap {
+		labelIds = append(labelIds, key)
+	}
+	//通过标签id获取标签，并转化成map
+	labels, err := l.svcCtx.LabelModel.FindListByIds(l.ctx, labelIds)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	labelMap := make(map[string]model.Label)
+	for _, label := range *labels {
+		labelMap[label.ID.Hex()] = label
+	}
+	resps := make([]*bird.IllustrationsRespVo, 0) //结果集
+	for _, illustration := range *data {
+		labelResps := make([]*bird.LabelResp, 0) //图鉴的标签列表
+		for _, labelId := range illustration.Labels {
+			//从labelMap获取标签
+			label, ok := labelMap[labelId]
+			if ok {
 				labelResps = append(labelResps, &bird.LabelResp{
-					Id:          labelData.ID.Hex(),
-					RecordState: int32(labelData.RecordState),
-					CreateTime:  labelData.CreateAt.UnixMilli(),
-					Name:        labelData.Name,
-					Typee:       labelData.Type,
-					ParentId:    labelData.ParentId,
+					Id:          label.ID.Hex(),
+					RecordState: int32(label.RecordState),
+					CreateTime:  label.CreateAt.UnixMilli(),
+					Name:        label.Name,
+					Typee:       label.Type,
+					ParentId:    label.ParentId,
 				})
 			}
 		}
