@@ -11,47 +11,44 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type LabelUpdateLogic struct {
+type UnpublishLabelLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewLabelUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LabelUpdateLogic {
-	return &LabelUpdateLogic{
+func NewUnpublishLabelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UnpublishLabelLogic {
+	return &UnpublishLabelLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp, error) {
-	// todo: add your logic here and delete this line
+func (l *UnpublishLabelLogic) UnpublishLabel(in *bird.IdReq) (*bird.LabelResp, error) {
 	label, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("记录不存在")
+			return nil, errors.New("没有对应记录")
 		}
 		return nil, err
 	}
 	if label == nil {
-		return nil, errors.New("记录不存在")
+		return nil, errors.New("没有对应记录")
 	}
-	if in.GetName() != "" {
-		label.Name = in.GetName()
+	if label.RecordState != 2 {
+		return nil, errors.New("未发布")
 	}
-	if in.GetTypee() != "" {
-		label.Type = in.GetTypee()
+	label.RecordState = 3
+	_, err = l.svcCtx.LabelModel.Update(l.ctx, label)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
 	}
-	if in.GetParentId() != "" {
-		label.ParentId = in.GetParentId()
-	} else {
-		label.ParentId = "0"
-	}
-	l.svcCtx.LabelModel.Update(l.ctx, label)
+
 	return &bird.LabelResp{
 		Id:          label.ID.Hex(),
-		RecordState: int32(label.RecordState),
+		RecordState: 1,
 		CreateTime:  label.CreateAt.UnixMilli(),
 		Name:        label.Name,
 		Typee:       label.Type,

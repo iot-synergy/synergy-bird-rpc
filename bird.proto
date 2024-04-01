@@ -238,6 +238,12 @@ message LabelVo {
   LabelResp data = 3;
 }
 
+message BooleanResp {
+  int64 code = 1;
+  string message = 2;
+  bool data = 3;
+}
+
 service bird {
   //  group: gallery
   rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
@@ -253,6 +259,12 @@ service bird {
   rpc illustrationList(IllustrationsListReq) returns (IllustrationsListResp);
   //  group: illustration
   rpc findIllustrationByPage(IllustrationsListReq) returns (IllustrationsListVo);
+  //  group: illustration
+  rpc publishIllustration(IdReq) returns (IllustrationsResp);
+  //  group: illustration
+  rpc unpublishIllustration(IdReq) returns (IllustrationsResp);
+  //  group: illustration
+  rpc deleteIllustration(IdReq) returns(BooleanResp);
   //  group: label
   rpc labelCreate(LabelCreateReq) returns (LabelResp);
   //  group: label
@@ -263,4 +275,10 @@ service bird {
   rpc findLabelByPage(LabelListReq) returns (LabelListVo);
   //  group: label
   rpc findLabelById (IdReq) returns (LabelVo);
+  //  group: label
+  rpc publishLabel(IdReq) returns (LabelResp);
+  //  group: label
+  rpc unpublishLabel(IdReq) returns (LabelResp);
+  //  group: label
+  rpc deleteLabel(IdReq) returns(BooleanResp);
 }

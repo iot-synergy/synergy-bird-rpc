@@ -57,7 +57,7 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		Name:        in.Name,
 		Type:        in.Typee,
 		ParentId:    in.ParentId,
-		RecordState: int8(in.RecordState),
+		RecordState: 1,
 	}
 	err = l.svcCtx.LabelModel.Insert(l.ctx, &data)
 	if err != nil {

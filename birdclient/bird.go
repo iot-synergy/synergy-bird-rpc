@@ -13,6 +13,7 @@ import (
 )
 
 type (
+	BooleanResp             = bird.BooleanResp
 	GalleryCreateReq        = bird.GalleryCreateReq
 	GalleryListReq          = bird.GalleryListReq
 	GalleryListResp         = bird.GalleryListResp
@@ -44,11 +45,17 @@ type (
 		IllustrationUpdate(ctx context.Context, in *IllustrationsUpdateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		IllustrationList(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListResp, error)
 		FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
+		PublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
+		UnpublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
+		DeleteIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
 		LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error)
 		LabelUpdate(ctx context.Context, in *LabelUpdateReq, opts ...grpc.CallOption) (*LabelResp, error)
 		LabelList(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListResp, error)
 		FindLabelByPage(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListVo, error)
 		FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error)
+		PublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
+		UnpublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
+		DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
 	}
 
 	defaultBird struct {
@@ -97,6 +104,21 @@ func (m *defaultBird) FindIllustrationByPage(ctx context.Context, in *Illustrati
 	return client.FindIllustrationByPage(ctx, in, opts...)
 }
 
+func (m *defaultBird) PublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.PublishIllustration(ctx, in, opts...)
+}
+
+func (m *defaultBird) UnpublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.UnpublishIllustration(ctx, in, opts...)
+}
+
+func (m *defaultBird) DeleteIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.DeleteIllustration(ctx, in, opts...)
+}
+
 func (m *defaultBird) LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.LabelCreate(ctx, in, opts...)
@@ -120,4 +142,19 @@ func (m *defaultBird) FindLabelByPage(ctx context.Context, in *LabelListReq, opt
 func (m *defaultBird) FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.FindLabelById(ctx, in, opts...)
+}
+
+func (m *defaultBird) PublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.PublishLabel(ctx, in, opts...)
+}
+
+func (m *defaultBird) UnpublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.UnpublishLabel(ctx, in, opts...)
+}
+
+func (m *defaultBird) DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.DeleteLabel(ctx, in, opts...)
 }

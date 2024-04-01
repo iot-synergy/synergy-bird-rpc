@@ -41,6 +41,12 @@ func (l *FindLabelByIdLogic) FindLabelById(in *bird.IdReq) (*bird.LabelVo, error
 			Message: "失败",
 		}, err
 	}
+	if data.RecordState != 2 {
+		return &bird.LabelVo{
+			Code:    -1,
+			Message: "失败",
+		}, err
+	}
 
 	return &bird.LabelVo{
 		Code:    0,

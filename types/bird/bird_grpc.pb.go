@@ -26,11 +26,17 @@ const (
 	Bird_IllustrationUpdate_FullMethodName     = "/bird.bird/illustrationUpdate"
 	Bird_IllustrationList_FullMethodName       = "/bird.bird/illustrationList"
 	Bird_FindIllustrationByPage_FullMethodName = "/bird.bird/findIllustrationByPage"
+	Bird_PublishIllustration_FullMethodName    = "/bird.bird/publishIllustration"
+	Bird_UnpublishIllustration_FullMethodName  = "/bird.bird/unpublishIllustration"
+	Bird_DeleteIllustration_FullMethodName     = "/bird.bird/deleteIllustration"
 	Bird_LabelCreate_FullMethodName            = "/bird.bird/labelCreate"
 	Bird_LabelUpdate_FullMethodName            = "/bird.bird/labelUpdate"
 	Bird_LabelList_FullMethodName              = "/bird.bird/labelList"
 	Bird_FindLabelByPage_FullMethodName        = "/bird.bird/findLabelByPage"
 	Bird_FindLabelById_FullMethodName          = "/bird.bird/findLabelById"
+	Bird_PublishLabel_FullMethodName           = "/bird.bird/publishLabel"
+	Bird_UnpublishLabel_FullMethodName         = "/bird.bird/unpublishLabel"
+	Bird_DeleteLabel_FullMethodName            = "/bird.bird/deleteLabel"
 )
 
 // BirdClient is the client API for Bird service.
@@ -51,6 +57,12 @@ type BirdClient interface {
 	IllustrationList(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListResp, error)
 	// group: illustration
 	FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
+	// group: illustration
+	PublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
+	// group: illustration
+	UnpublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
+	// group: illustration
+	DeleteIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
 	// group: label
 	LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error)
 	// group: label
@@ -61,6 +73,12 @@ type BirdClient interface {
 	FindLabelByPage(ctx context.Context, in *LabelListReq, opts ...grpc.CallOption) (*LabelListVo, error)
 	// group: label
 	FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelVo, error)
+	// group: label
+	PublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
+	// group: label
+	UnpublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
+	// group: label
+	DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
 }
 
 type birdClient struct {
@@ -134,6 +152,33 @@ func (c *birdClient) FindIllustrationByPage(ctx context.Context, in *Illustratio
 	return out, nil
 }
 
+func (c *birdClient) PublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error) {
+	out := new(IllustrationsResp)
+	err := c.cc.Invoke(ctx, Bird_PublishIllustration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) UnpublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error) {
+	out := new(IllustrationsResp)
+	err := c.cc.Invoke(ctx, Bird_UnpublishIllustration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) DeleteIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error) {
+	out := new(BooleanResp)
+	err := c.cc.Invoke(ctx, Bird_DeleteIllustration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *birdClient) LabelCreate(ctx context.Context, in *LabelCreateReq, opts ...grpc.CallOption) (*LabelResp, error) {
 	out := new(LabelResp)
 	err := c.cc.Invoke(ctx, Bird_LabelCreate_FullMethodName, in, out, opts...)
@@ -179,6 +224,33 @@ func (c *birdClient) FindLabelById(ctx context.Context, in *IdReq, opts ...grpc.
 	return out, nil
 }
 
+func (c *birdClient) PublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error) {
+	out := new(LabelResp)
+	err := c.cc.Invoke(ctx, Bird_PublishLabel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) UnpublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error) {
+	out := new(LabelResp)
+	err := c.cc.Invoke(ctx, Bird_UnpublishLabel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error) {
+	out := new(BooleanResp)
+	err := c.cc.Invoke(ctx, Bird_DeleteLabel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BirdServer is the server API for Bird service.
 // All implementations must embed UnimplementedBirdServer
 // for forward compatibility
@@ -197,6 +269,12 @@ type BirdServer interface {
 	IllustrationList(context.Context, *IllustrationsListReq) (*IllustrationsListResp, error)
 	// group: illustration
 	FindIllustrationByPage(context.Context, *IllustrationsListReq) (*IllustrationsListVo, error)
+	// group: illustration
+	PublishIllustration(context.Context, *IdReq) (*IllustrationsResp, error)
+	// group: illustration
+	UnpublishIllustration(context.Context, *IdReq) (*IllustrationsResp, error)
+	// group: illustration
+	DeleteIllustration(context.Context, *IdReq) (*BooleanResp, error)
 	// group: label
 	LabelCreate(context.Context, *LabelCreateReq) (*LabelResp, error)
 	// group: label
@@ -207,6 +285,12 @@ type BirdServer interface {
 	FindLabelByPage(context.Context, *LabelListReq) (*LabelListVo, error)
 	// group: label
 	FindLabelById(context.Context, *IdReq) (*LabelVo, error)
+	// group: label
+	PublishLabel(context.Context, *IdReq) (*LabelResp, error)
+	// group: label
+	UnpublishLabel(context.Context, *IdReq) (*LabelResp, error)
+	// group: label
+	DeleteLabel(context.Context, *IdReq) (*BooleanResp, error)
 	mustEmbedUnimplementedBirdServer()
 }
 
@@ -235,6 +319,15 @@ func (UnimplementedBirdServer) IllustrationList(context.Context, *IllustrationsL
 func (UnimplementedBirdServer) FindIllustrationByPage(context.Context, *IllustrationsListReq) (*IllustrationsListVo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindIllustrationByPage not implemented")
 }
+func (UnimplementedBirdServer) PublishIllustration(context.Context, *IdReq) (*IllustrationsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishIllustration not implemented")
+}
+func (UnimplementedBirdServer) UnpublishIllustration(context.Context, *IdReq) (*IllustrationsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnpublishIllustration not implemented")
+}
+func (UnimplementedBirdServer) DeleteIllustration(context.Context, *IdReq) (*BooleanResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteIllustration not implemented")
+}
 func (UnimplementedBirdServer) LabelCreate(context.Context, *LabelCreateReq) (*LabelResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LabelCreate not implemented")
 }
@@ -249,6 +342,15 @@ func (UnimplementedBirdServer) FindLabelByPage(context.Context, *LabelListReq) (
 }
 func (UnimplementedBirdServer) FindLabelById(context.Context, *IdReq) (*LabelVo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindLabelById not implemented")
+}
+func (UnimplementedBirdServer) PublishLabel(context.Context, *IdReq) (*LabelResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishLabel not implemented")
+}
+func (UnimplementedBirdServer) UnpublishLabel(context.Context, *IdReq) (*LabelResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnpublishLabel not implemented")
+}
+func (UnimplementedBirdServer) DeleteLabel(context.Context, *IdReq) (*BooleanResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteLabel not implemented")
 }
 func (UnimplementedBirdServer) mustEmbedUnimplementedBirdServer() {}
 
@@ -389,6 +491,60 @@ func _Bird_FindIllustrationByPage_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bird_PublishIllustration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).PublishIllustration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_PublishIllustration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).PublishIllustration(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_UnpublishIllustration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).UnpublishIllustration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_UnpublishIllustration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).UnpublishIllustration(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_DeleteIllustration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).DeleteIllustration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_DeleteIllustration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).DeleteIllustration(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Bird_LabelCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LabelCreateReq)
 	if err := dec(in); err != nil {
@@ -479,6 +635,60 @@ func _Bird_FindLabelById_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bird_PublishLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).PublishLabel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_PublishLabel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).PublishLabel(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_UnpublishLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).UnpublishLabel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_UnpublishLabel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).UnpublishLabel(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_DeleteLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).DeleteLabel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_DeleteLabel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).DeleteLabel(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Bird_ServiceDesc is the grpc.ServiceDesc for Bird service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -515,6 +725,18 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bird_FindIllustrationByPage_Handler,
 		},
 		{
+			MethodName: "publishIllustration",
+			Handler:    _Bird_PublishIllustration_Handler,
+		},
+		{
+			MethodName: "unpublishIllustration",
+			Handler:    _Bird_UnpublishIllustration_Handler,
+		},
+		{
+			MethodName: "deleteIllustration",
+			Handler:    _Bird_DeleteIllustration_Handler,
+		},
+		{
 			MethodName: "labelCreate",
 			Handler:    _Bird_LabelCreate_Handler,
 		},
@@ -533,6 +755,18 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "findLabelById",
 			Handler:    _Bird_FindLabelById_Handler,
+		},
+		{
+			MethodName: "publishLabel",
+			Handler:    _Bird_PublishLabel_Handler,
+		},
+		{
+			MethodName: "unpublishLabel",
+			Handler:    _Bird_UnpublishLabel_Handler,
+		},
+		{
+			MethodName: "deleteLabel",
+			Handler:    _Bird_DeleteLabel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

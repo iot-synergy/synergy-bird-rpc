@@ -59,6 +59,21 @@ func (s *BirdServer) FindIllustrationByPage(ctx context.Context, in *bird.Illust
 	return l.FindIllustrationByPage(in)
 }
 
+func (s *BirdServer) PublishIllustration(ctx context.Context, in *bird.IdReq) (*bird.IllustrationsResp, error) {
+	l := illustration.NewPublishIllustrationLogic(ctx, s.svcCtx)
+	return l.PublishIllustration(in)
+}
+
+func (s *BirdServer) UnpublishIllustration(ctx context.Context, in *bird.IdReq) (*bird.IllustrationsResp, error) {
+	l := illustration.NewUnpublishIllustrationLogic(ctx, s.svcCtx)
+	return l.UnpublishIllustration(in)
+}
+
+func (s *BirdServer) DeleteIllustration(ctx context.Context, in *bird.IdReq) (*bird.BooleanResp, error) {
+	l := illustration.NewDeleteIllustrationLogic(ctx, s.svcCtx)
+	return l.DeleteIllustration(in)
+}
+
 func (s *BirdServer) LabelCreate(ctx context.Context, in *bird.LabelCreateReq) (*bird.LabelResp, error) {
 	l := label.NewLabelCreateLogic(ctx, s.svcCtx)
 	return l.LabelCreate(in)
@@ -82,4 +97,19 @@ func (s *BirdServer) FindLabelByPage(ctx context.Context, in *bird.LabelListReq)
 func (s *BirdServer) FindLabelById(ctx context.Context, in *bird.IdReq) (*bird.LabelVo, error) {
 	l := label.NewFindLabelByIdLogic(ctx, s.svcCtx)
 	return l.FindLabelById(in)
+}
+
+func (s *BirdServer) PublishLabel(ctx context.Context, in *bird.IdReq) (*bird.LabelResp, error) {
+	l := label.NewPublishLabelLogic(ctx, s.svcCtx)
+	return l.PublishLabel(in)
+}
+
+func (s *BirdServer) UnpublishLabel(ctx context.Context, in *bird.IdReq) (*bird.LabelResp, error) {
+	l := label.NewUnpublishLabelLogic(ctx, s.svcCtx)
+	return l.UnpublishLabel(in)
+}
+
+func (s *BirdServer) DeleteLabel(ctx context.Context, in *bird.IdReq) (*bird.BooleanResp, error) {
+	l := label.NewDeleteLabelLogic(ctx, s.svcCtx)
+	return l.DeleteLabel(in)
 }

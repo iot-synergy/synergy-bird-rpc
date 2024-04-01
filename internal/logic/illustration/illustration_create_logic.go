@@ -40,7 +40,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		Type:        in.Typee,
 		Labels:      make([]string, 0),
 		Description: in.Description,
-		RecordState: int8(in.RecordState),
+		RecordState: 1,
 	}
 	for _, label := range in.Labels {
 		label, err := l.svcCtx.LabelModel.FindOne(l.ctx, label)

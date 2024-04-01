@@ -39,9 +39,6 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		return nil, errors.New("没有对应记录")
 	}
 	illustration.UpdateAt = time.Now()
-	if in.GetRecordState() != 0 {
-		illustration.RecordState = int8(in.GetRecordState())
-	}
 	if in.GetTitle() != "" {
 		illustration.Title = in.GetTitle()
 	}
