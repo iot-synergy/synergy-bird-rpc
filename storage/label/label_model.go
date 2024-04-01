@@ -83,6 +83,8 @@ func (m *customLabelModel) FindListByParamAndPage(ctx context.Context, typee, pa
 	}
 	if recordState != 0 {
 		filterDate["recordState"] = recordState
+	} else {
+		filterDate["recordState"] = bson.M{"$ne": 4}
 	}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {

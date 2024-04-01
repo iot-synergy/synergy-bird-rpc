@@ -26,7 +26,7 @@ func NewFindIllustrationByPageLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsListReq) (*bird.IllustrationsListVo, error) {
-	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), in.GetState(), in.Page, in.PageSize)
+	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), 2, in.Page, in.PageSize)
 	if err != nil {
 		return &bird.IllustrationsListVo{
 			Code:    -1,

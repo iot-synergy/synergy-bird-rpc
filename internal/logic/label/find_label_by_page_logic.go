@@ -24,7 +24,7 @@ func NewFindLabelByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *F
 }
 
 func (l *FindLabelByPageLogic) FindLabelByPage(in *bird.LabelListReq) (*bird.LabelListVo, error) {
-	data, count, err := l.svcCtx.LabelModel.FindListByParamAndPage(l.ctx, in.GetTypee(), in.GetParentId(), in.Page, in.PageSize, in.GetRecordState())
+	data, count, err := l.svcCtx.LabelModel.FindListByParamAndPage(l.ctx, in.GetTypee(), in.GetParentId(), in.Page, in.PageSize, 2)
 	if err != nil {
 		return &bird.LabelListVo{
 			Code:    -1,
