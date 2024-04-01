@@ -37,6 +37,9 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 	if label == nil {
 		return nil, errors.New("记录不存在")
 	}
+	if in.GetRecordState() != 0 {
+		label.RecordState = int8(in.GetRecordState())
+	}
 	if in.GetName() != "" {
 		label.Name = in.GetName()
 	}
