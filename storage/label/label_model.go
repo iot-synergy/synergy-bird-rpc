@@ -5,6 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -115,7 +116,14 @@ func (m *customLabelModel) FindListByIds(ctx context.Context, ids []string) (*[]
 	data := make([]Label, 0)
 	filterDate := make(map[string]interface{}) //查询条件data
 	filterDate["recordState"] = 2
-	filterDate["_id"] = bson.M{"$in": ids}
+	oids := make([]primitive.ObjectID, 0)
+	for _, id := range ids {
+		oid, err := primitive.ObjectIDFromHex(id)
+		if err == nil {
+			oids = append(oids, oid)
+		}
+	}
+	filterDate["_id"] = bson.M{"$in": oids}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
 		logx.Error(err.Error())
