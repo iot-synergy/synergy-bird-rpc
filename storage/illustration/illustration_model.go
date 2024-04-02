@@ -17,6 +17,7 @@ type (
 		illustrationModel
 		FindListByParamAndPage(ctx context.Context, labels []string, typee, keyword string,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
+		FindOneByTitle(ctx context.Context, title string) (*Illustration, error)
 	}
 
 	customIllustrationModel struct {
@@ -91,4 +92,17 @@ func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, la
 	findoptions.SetSort(bson.D{bson.E{"updateAt", -1}})
 	m.conn.Find(ctx, &data, filter, findoptions)
 	return &data, count, nil
+}
+
+func (m *customIllustrationModel) FindOneByTitle(ctx context.Context, title string) (*Illustration, error) {
+	var data Illustration
+	err := m.conn.FindOne(ctx, &data, bson.M{"title": title})
+	switch err {
+	case nil:
+		return &data, nil
+	case mon.ErrNotFound:
+		return nil, nil
+	default:
+		return nil, err
+	}
 }

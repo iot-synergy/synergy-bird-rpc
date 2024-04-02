@@ -13,11 +13,11 @@ message GalleryCreateReq {
   //2:Normal
   //3:Deleted
   //4:Forbidden
-  int32 recordState = 2;
+  optional int32 recordState = 2;
   string name = 3;
   string userId = 4;
-  int32 favorite = 5;
-  repeated string labels = 6;
+  optional string IllustrationId = 5;
+  string TraceId = 6;
 }
 
 message GalleryUpdateReq {
@@ -29,8 +29,8 @@ message GalleryUpdateReq {
   optional int32 recordState = 2;
   optional string name = 3;
   optional string userId = 4;
-  optional int32 favorite = 5;
-  repeated string labels = 6;
+  optional string IllustrationId = 5;
+  optional string TraceId = 6;
 }
 
 message GalleryListReq {
@@ -51,8 +51,7 @@ message GalleryResp {
   int64 createTime = 3;
   string name = 4;
   string userId = 5;
-  int32 favorite = 6;
-  repeated string labels = 7;
+  IllustrationsResp Illustration = 6;
 }
 
 message GalleryListResp {

@@ -6,7 +6,8 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-	MonDb MonConfig
+	MonDb    MonConfig
+	EventRpc zrpc.RpcClientConf
 }
 
 type MonConfig struct {

@@ -20,3 +20,8 @@ Etcd:
   Hosts:
     - 127.0.0.1:2379
   Key: bird.rpc
+
+EventRpc:
+  Endpoints:
+    - 127.0.0.1:8088
+  Enabled: false

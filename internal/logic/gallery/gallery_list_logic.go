@@ -43,8 +43,6 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryLi
 			CreateTime:  gallery.CreateAt.UnixMilli(),
 			Name:        gallery.Name,
 			UserId:      gallery.UserId,
-			Favorite:    gallery.Favorite,
-			Labels:      gallery.Labels,
 		})
 	}
 

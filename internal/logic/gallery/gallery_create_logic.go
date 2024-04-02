@@ -6,6 +6,9 @@ import (
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/gallery"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
+	"github.com/iot-synergy/synergy-event-rpc/synergyeventclient"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -26,25 +29,55 @@ func NewGalleryCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Gal
 }
 
 func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.GalleryResp, error) {
-	// todo: add your logic here and delete this line
 	dupRecord, err := l.svcCtx.GalleryModel.FindOneByNameAndUserId(l.ctx, in.Name, in.UserId)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err
 	}
-	if dupRecord != nil {
-		logx.Error("存在相同记录")
-		return nil, errors.New("存在相同记录")
+	if dupRecord == nil {
+		// todo:用户解锁图鉴
+	}
+	aiEvent, err := l.svcCtx.EventRpc.QueryAiEventByTraceId(l.ctx, &synergyeventclient.StringBase{Id: in.TraceId})
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	if aiEvent == nil {
+		return nil, errors.New("没有查询到关联的ai事件")
+	}
+	if in.UserId != aiEvent.GetOwnerId() {
+		return nil, errors.New("ai事件不属于当前用户")
+	}
+	names := strings.Split(aiEvent.GetName(), ",")
+	confidences := strings.Split(aiEvent.GetConfidence(), ",")
+	name := ""
+	confidence := 0.0
+	for i := 0; i < len(names) && i < len(confidences); i++ {
+		float, e := strconv.ParseFloat(confidences[i], 64)
+		if e == nil && float > confidence && names[i] != "" {
+			name = names[i]
+		}
+	}
+	if name == "" {
+		return nil, errors.New("ai事件当中没有关联鸟类信息")
+	}
+	illustration, err := l.svcCtx.IllustrationModel.FindOneByTitle(l.ctx, name)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	if illustration == nil {
+		return nil, errors.New("ai事件当中关联鸟类信息没有保存到图鉴里")
 	}
 
 	gallery := model.Gallery{
-		UpdateAt:    time.Time{},
-		CreateAt:    time.Time{},
-		Name:        in.Name,
-		UserId:      in.UserId,
-		Favorite:    in.Favorite,
-		Labels:      in.Labels,
-		RecordState: int8(in.RecordState),
+		UpdateAt:       time.Time{},
+		CreateAt:       time.Time{},
+		Name:           in.Name,
+		UserId:         in.UserId,
+		IllustrationId: illustration.ID.Hex(),
+		TraceId:        in.TraceId,
+		RecordState:    int8(*in.RecordState),
 	}
 	err = l.svcCtx.GalleryModel.Insert(l.ctx, &gallery)
 
@@ -59,7 +92,19 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 		CreateTime:  gallery.CreateAt.UnixMilli(),
 		Name:        gallery.Name,
 		UserId:      gallery.UserId,
-		Favorite:    gallery.Favorite,
-		Labels:      gallery.Labels,
+		Illustration: &bird.IllustrationsResp{
+			Id:          illustration.ID.Hex(),
+			RecordState: int32(illustration.RecordState),
+			CreateTime:  illustration.CreateAt.UnixMilli(),
+			Title:       illustration.Title,
+			Score:       illustration.Score,
+			WikiUrl:     illustration.WikiUrl,
+			ImagePath:   illustration.ImagePath,
+			IconPath:    illustration.IconPath,
+			MoreImages:  illustration.MoreImages,
+			Typee:       illustration.Type,
+			Labels:      illustration.Labels,
+			Description: illustration.Description,
+		},
 	}, nil
 }

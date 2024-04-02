@@ -42,22 +42,7 @@ func (l *GalleryUpdateLogic) GalleryUpdate(in *bird.GalleryUpdateReq) (*bird.Gal
 		return nil, errors.New("此纪录不属于该用户")
 	}
 	gallery.UpdateAt = time.Now()
-	gallery.Favorite = in.GetFavorite()
-	if in.GetName() != "" {
-		gallery.Name = in.GetName()
-		findOne, err := l.svcCtx.GalleryModel.FindOneByNameAndUserId(l.ctx, in.GetName(), in.GetUserId())
-		if err != nil {
-			logx.Error(err.Error())
-			return nil, err
-		}
-		if findOne != nil {
-			logx.Error("存在相同记录")
-			return nil, errors.New("存在相同记录")
-		}
-	}
-	if in.GetLabels() != nil && len(in.GetLabels()) > 0 {
-		gallery.Labels = in.Labels
-	}
+
 	if in.GetRecordState() != 0 {
 		gallery.RecordState = int8(in.GetRecordState())
 	}
@@ -70,7 +55,5 @@ func (l *GalleryUpdateLogic) GalleryUpdate(in *bird.GalleryUpdateReq) (*bird.Gal
 		CreateTime:  gallery.CreateAt.UnixMilli(),
 		Name:        gallery.Name,
 		UserId:      gallery.UserId,
-		Favorite:    gallery.Favorite,
-		Labels:      gallery.Labels,
 	}, nil
 }
