@@ -29,14 +29,6 @@ func NewGalleryCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Gal
 }
 
 func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.GalleryResp, error) {
-	dupRecord, err := l.svcCtx.GalleryModel.FindOneByNameAndUserId(l.ctx, in.Name, in.UserId)
-	if err != nil {
-		logx.Error(err.Error())
-		return nil, err
-	}
-	if dupRecord == nil {
-		// todo:用户解锁图鉴
-	}
 	aiEvent, err := l.svcCtx.EventRpc.QueryAiEventByTraceId(l.ctx, &synergyeventclient.StringBase{Id: in.TraceId})
 	if err != nil {
 		logx.Error(err.Error())
@@ -73,19 +65,18 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 	gallery := model.Gallery{
 		UpdateAt:       time.Time{},
 		CreateAt:       time.Time{},
-		Name:           in.Name,
+		Name:           illustration.Title,
 		UserId:         in.UserId,
 		IllustrationId: illustration.ID.Hex(),
 		TraceId:        in.TraceId,
-		RecordState:    int8(*in.RecordState),
+		RecordState:    2,
 	}
 	err = l.svcCtx.GalleryModel.Insert(l.ctx, &gallery)
-
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err
 	}
-
+	// todo:用户解锁图鉴
 	return &bird.GalleryResp{
 		Id:          gallery.ID.Hex(),
 		RecordState: int32(gallery.RecordState),

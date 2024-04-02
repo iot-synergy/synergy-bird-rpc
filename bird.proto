@@ -14,10 +14,9 @@ message GalleryCreateReq {
   //3:Deleted
   //4:Forbidden
   optional int32 recordState = 2;
-  string name = 3;
+  optional string name = 3;
   string userId = 4;
-  optional string IllustrationId = 5;
-  string TraceId = 6;
+  string TraceId = 5;
 }
 
 message GalleryUpdateReq {
@@ -29,7 +28,6 @@ message GalleryUpdateReq {
   optional int32 recordState = 2;
   optional string name = 3;
   optional string userId = 4;
-  optional string IllustrationId = 5;
   optional string TraceId = 6;
 }
 
