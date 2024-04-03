@@ -59,6 +59,9 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 	if in.GetTypee() != "" {
 		illustration.Type = in.GetTypee()
 	}
+	if in.GetRecordState() > 0 && in.GetRecordState() < 5 {
+		illustration.RecordState = int8(in.GetRecordState())
+	}
 	labels, err := l.svcCtx.LabelModel.FindListByIds(l.ctx, in.Labels)
 	if err != nil {
 		logx.Error(err.Error())
