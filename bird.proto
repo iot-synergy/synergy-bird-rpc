@@ -15,7 +15,7 @@ message GalleryCreateReq {
   //4:Forbidden
   optional int32 recordState = 2;
   optional string name = 3;
-  string userId = 4;
+  optional string userId = 4;
   string TraceId = 5;
 }
 
@@ -32,14 +32,21 @@ message GalleryUpdateReq {
 }
 
 message GalleryListReq {
-  string userId = 1;
-  repeated string labels = 2;
-  int32 favorite = 3;
-  uint64 page = 4;
-  uint64 pageSize = 5;
+  optional string illustrationId = 1;
+  optional string name = 2;
+  optional int64 startTime = 3;
+  optional int64 endTime = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
 }
 
 message GalleryResp {
+  int64 code = 1;
+  string msg = 2;
+  GalleryRespData data = 3;
+}
+
+message GalleryRespData {
   string id = 1;
   //1:Created
   //2:Normal
@@ -53,10 +60,14 @@ message GalleryResp {
 }
 
 message GalleryListResp {
-  repeated GalleryResp results = 1;
-  int64 total = 2;
+  GalleryListRespData data = 1;
   int64 code = 3;
-  string message = 4;
+  string msg = 4;
+}
+
+message GalleryListRespData {
+  repeated GalleryRespData data = 1;
+  int64 total = 2;
 }
 
 message IllustrationsCreateReq {
@@ -245,7 +256,7 @@ service bird {
   //  group: gallery
   rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
   //  group: gallery
-  rpc galleryUpdate(GalleryUpdateReq) returns (GalleryResp);
+  rpc galleryDelete(IdReq) returns (GalleryResp);
   //  group: gallery
   rpc galleryList(GalleryListReq) returns (GalleryListResp);
   //  group: illustration

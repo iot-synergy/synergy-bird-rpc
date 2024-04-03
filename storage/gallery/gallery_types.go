@@ -15,6 +15,7 @@ type Gallery struct {
 	UserId         string    `bson:"userId,omitempty" json:"userId,omitempty"`
 	IllustrationId string    `bson:"illustrationId,omitempty" json:"illustrationId,omitempty"`
 	TraceId        string    `bson:"traceId,omitempty" json:"traceId,omitempty"`
+	ImageUrl       string    `bson:"imageUrl,omitempty" json:"imageUrl,omitempty"`
 	//1:Created
 	//2:Normal
 	//3:Deleted

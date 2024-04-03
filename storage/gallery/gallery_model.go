@@ -6,6 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"time"
 )
 
 var _ GalleryModel = (*customGalleryModel)(nil)
@@ -16,8 +17,9 @@ type (
 	GalleryModel interface {
 		galleryModel
 		FindOneByNameAndUserId(ctx context.Context, name, userId string) (*Gallery, error)
-		FindListByParamAndPage(ctx context.Context, userId string, labels []string, favorite int32,
+		FindListByParamAndPage(ctx context.Context, userId string, illustrationId, name string, startTime, endTime int64,
 			page, pageSize uint64) (*[]Gallery, int64, error)
+		FindOneByTraceId(ctx context.Context, traceId string) (*Gallery, error)
 	}
 
 	customGalleryModel struct {
@@ -48,21 +50,23 @@ func (m *customGalleryModel) FindOneByNameAndUserId(ctx context.Context, name, u
 	}
 }
 
-func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId string, labels []string, favorite int32,
-	page, pageSize uint64) (*[]Gallery, int64, error) {
+func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId string, illustrationId, name string,
+	startTime, endTime int64, page, pageSize uint64) (*[]Gallery, int64, error) {
 	data := make([]Gallery, 0)
 
 	filterDate := make(map[string]interface{}) //查询条件data
-	if labels != nil && len(labels) != 0 {
-		filterLabels := make(map[string][]string)
-		filterLabels["$in"] = labels
-		filterDate["labels"] = filterLabels
+	filterDate["userId"] = userId
+	if illustrationId != "" {
+		filterDate["illustrationId"] = illustrationId
 	}
-	if userId != "" {
-		filterDate["userId"] = userId
+	if name != "" {
+		filterDate["name"] = bson.M{"$regex": name}
 	}
-	if favorite != 0 {
-		filterDate["favorite"] = favorite
+	if startTime != 0 {
+		filterDate["updateAt"] = bson.M{"$gte": time.UnixMilli(startTime)}
+	}
+	if endTime != 0 {
+		filterDate["updateAt"] = bson.M{"$lt": time.UnixMilli(endTime)}
 	}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
@@ -90,4 +94,20 @@ func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId 
 		return nil, 0, err
 	}
 	return &data, count, nil
+}
+
+func (m *customGalleryModel) FindOneByTraceId(ctx context.Context, traceId string) (*Gallery, error) {
+	var data Gallery
+
+	err := m.conn.FindOne(ctx, &data, bson.M{
+		"traceId":     traceId,
+		"recordState": 2})
+	switch err {
+	case nil:
+		return &data, nil
+	case mon.ErrNotFound:
+		return nil, nil
+	default:
+		return nil, err
+	}
 }

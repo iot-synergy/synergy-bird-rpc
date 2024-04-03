@@ -29,9 +29,9 @@ func (s *BirdServer) GalleryCreate(ctx context.Context, in *bird.GalleryCreateRe
 	return l.GalleryCreate(in)
 }
 
-func (s *BirdServer) GalleryUpdate(ctx context.Context, in *bird.GalleryUpdateReq) (*bird.GalleryResp, error) {
-	l := gallery.NewGalleryUpdateLogic(ctx, s.svcCtx)
-	return l.GalleryUpdate(in)
+func (s *BirdServer) GalleryDelete(ctx context.Context, in *bird.IdReq) (*bird.GalleryResp, error) {
+	l := gallery.NewGalleryDeleteLogic(ctx, s.svcCtx)
+	return l.GalleryDelete(in)
 }
 
 func (s *BirdServer) GalleryList(ctx context.Context, in *bird.GalleryListReq) (*bird.GalleryListResp, error) {

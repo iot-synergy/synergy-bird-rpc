@@ -2,6 +2,8 @@ package gallery
 
 import (
 	"context"
+	"google.golang.org/grpc/metadata"
+	"strings"
 
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
@@ -24,32 +26,44 @@ func NewGalleryListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Galle
 }
 
 func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryListResp, error) {
-	// todo: add your logic here and delete this line
-	data, count, err := l.svcCtx.GalleryModel.FindListByParamAndPage(l.ctx, in.UserId, in.Labels, in.Favorite, in.Page, in.PageSize)
+	// 获取用户id
+	value := metadata.ValueFromIncomingContext(l.ctx, "gateway-firebaseid")
+	if len(value) <= 0 {
+		return &bird.GalleryListResp{
+			Code: -1,
+			Msg:  "用户未登录",
+			Data: nil,
+		}, nil
+	}
+	forein_id := strings.Join(value, "")
+	data, count, err := l.svcCtx.GalleryModel.FindListByParamAndPage(l.ctx, forein_id, in.GetIllustrationId(),
+		in.GetName(), in.GetStartTime(), in.GetEndTime(), in.Page, in.PageSize)
 	if err != nil {
 		return &bird.GalleryListResp{
-			Results: nil,
-			Total:   0,
-			Code:    -1,
-			Message: err.Error(),
+			Code: -1,
+			Msg:  err.Error(),
+			Data: nil,
 		}, err
 	}
 
-	resps := make([]*bird.GalleryResp, 0)
+	resps := make([]*bird.GalleryRespData, 0)
 	for _, gallery := range *data {
-		resps = append(resps, &bird.GalleryResp{
-			Id:          gallery.ID.Hex(),
-			RecordState: int32(gallery.RecordState),
-			CreateTime:  gallery.CreateAt.UnixMilli(),
-			Name:        gallery.Name,
-			UserId:      gallery.UserId,
+		resps = append(resps, &bird.GalleryRespData{
+			Id:           gallery.ID.Hex(),
+			RecordState:  int32(gallery.RecordState),
+			CreateTime:   gallery.CreateAt.UnixMilli(),
+			Name:         gallery.Name,
+			UserId:       gallery.UserId,
+			Illustration: nil,
 		})
 	}
 
 	return &bird.GalleryListResp{
-		Results: resps,
-		Total:   count,
-		Code:    0,
-		Message: "成功",
+		Code: 0,
+		Msg:  "成功",
+		Data: &bird.GalleryListRespData{
+			Data:  resps,
+			Total: count,
+		},
 	}, nil
 }

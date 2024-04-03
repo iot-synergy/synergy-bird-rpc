@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Bird_GalleryCreate_FullMethodName          = "/bird.bird/galleryCreate"
-	Bird_GalleryUpdate_FullMethodName          = "/bird.bird/galleryUpdate"
+	Bird_GalleryDelete_FullMethodName          = "/bird.bird/galleryDelete"
 	Bird_GalleryList_FullMethodName            = "/bird.bird/galleryList"
 	Bird_IllustrationCreate_FullMethodName     = "/bird.bird/illustrationCreate"
 	Bird_IllustrationUpdate_FullMethodName     = "/bird.bird/illustrationUpdate"
@@ -46,7 +46,7 @@ type BirdClient interface {
 	// group: gallery
 	GalleryCreate(ctx context.Context, in *GalleryCreateReq, opts ...grpc.CallOption) (*GalleryResp, error)
 	// group: gallery
-	GalleryUpdate(ctx context.Context, in *GalleryUpdateReq, opts ...grpc.CallOption) (*GalleryResp, error)
+	GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*GalleryResp, error)
 	// group: gallery
 	GalleryList(ctx context.Context, in *GalleryListReq, opts ...grpc.CallOption) (*GalleryListResp, error)
 	// group: illustration
@@ -98,9 +98,9 @@ func (c *birdClient) GalleryCreate(ctx context.Context, in *GalleryCreateReq, op
 	return out, nil
 }
 
-func (c *birdClient) GalleryUpdate(ctx context.Context, in *GalleryUpdateReq, opts ...grpc.CallOption) (*GalleryResp, error) {
+func (c *birdClient) GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*GalleryResp, error) {
 	out := new(GalleryResp)
-	err := c.cc.Invoke(ctx, Bird_GalleryUpdate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bird_GalleryDelete_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +258,7 @@ type BirdServer interface {
 	// group: gallery
 	GalleryCreate(context.Context, *GalleryCreateReq) (*GalleryResp, error)
 	// group: gallery
-	GalleryUpdate(context.Context, *GalleryUpdateReq) (*GalleryResp, error)
+	GalleryDelete(context.Context, *IdReq) (*GalleryResp, error)
 	// group: gallery
 	GalleryList(context.Context, *GalleryListReq) (*GalleryListResp, error)
 	// group: illustration
@@ -301,8 +301,8 @@ type UnimplementedBirdServer struct {
 func (UnimplementedBirdServer) GalleryCreate(context.Context, *GalleryCreateReq) (*GalleryResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GalleryCreate not implemented")
 }
-func (UnimplementedBirdServer) GalleryUpdate(context.Context, *GalleryUpdateReq) (*GalleryResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GalleryUpdate not implemented")
+func (UnimplementedBirdServer) GalleryDelete(context.Context, *IdReq) (*GalleryResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GalleryDelete not implemented")
 }
 func (UnimplementedBirdServer) GalleryList(context.Context, *GalleryListReq) (*GalleryListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GalleryList not implemented")
@@ -383,20 +383,20 @@ func _Bird_GalleryCreate_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bird_GalleryUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GalleryUpdateReq)
+func _Bird_GalleryDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BirdServer).GalleryUpdate(ctx, in)
+		return srv.(BirdServer).GalleryDelete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bird_GalleryUpdate_FullMethodName,
+		FullMethod: Bird_GalleryDelete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BirdServer).GalleryUpdate(ctx, req.(*GalleryUpdateReq))
+		return srv.(BirdServer).GalleryDelete(ctx, req.(*IdReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -701,8 +701,8 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bird_GalleryCreate_Handler,
 		},
 		{
-			MethodName: "galleryUpdate",
-			Handler:    _Bird_GalleryUpdate_Handler,
+			MethodName: "galleryDelete",
+			Handler:    _Bird_GalleryDelete_Handler,
 		},
 		{
 			MethodName: "galleryList",
