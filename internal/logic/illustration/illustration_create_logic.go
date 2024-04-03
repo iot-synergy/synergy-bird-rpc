@@ -38,7 +38,11 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		Type:        in.Typee,
 		Labels:      make([]string, 0),
 		Description: in.Description,
-		RecordState: 1,
+	}
+	if in.RecordState == 2 {
+		illustration.RecordState = 2
+	} else {
+		illustration.RecordState = 1
 	}
 	labels, err := l.svcCtx.LabelModel.FindListByIds(l.ctx, in.Labels)
 	if err != nil {
