@@ -17,9 +17,10 @@ type (
 	GalleryModel interface {
 		galleryModel
 		FindOneByNameAndUserId(ctx context.Context, name, userId string) (*Gallery, error)
-		FindListByParamAndPage(ctx context.Context, userId string, illustrationId, name string, startTime, endTime int64,
+		FindListByParamAndPage(ctx context.Context, userId, illustrationId, name string, startTime, endTime int64,
 			page, pageSize uint64) (*[]Gallery, int64, error)
 		FindOneByTraceId(ctx context.Context, traceId string) (*Gallery, error)
+		CountByUserIdAndIllustrationId(ctx context.Context, userId, illustrationId string) (int64, error)
 	}
 
 	customGalleryModel struct {
@@ -111,4 +112,12 @@ func (m *customGalleryModel) FindOneByTraceId(ctx context.Context, traceId strin
 	default:
 		return nil, err
 	}
+}
+
+func (m *customGalleryModel) CountByUserIdAndIllustrationId(ctx context.Context, userId, illustrationId string) (int64, error) {
+	count, err := m.conn.CountDocuments(ctx, bson.M{"userId": userId, "illustrationId": illustrationId, "recordState": 2})
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }

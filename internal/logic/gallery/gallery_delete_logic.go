@@ -69,6 +69,21 @@ func (l *GalleryDeleteLogic) GalleryDelete(in *bird.IdReq) (*bird.GalleryResp, e
 	gallery.RecordState = 4
 
 	_, err = l.svcCtx.GalleryModel.Update(l.ctx, gallery)
+	if err != nil {
+		return &bird.GalleryResp{
+			Code: -2,
+			Msg:  "失败",
+			Data: nil,
+		}, err
+	}
+
+	//更新图鉴数量
+	galleryCountData, err := l.svcCtx.GalleryCountModel.FindOneByUserIdAndIllustrationId(l.ctx, forein_id, gallery.IllustrationId)
+	if galleryCountData != nil && galleryCountData.Name != "" {
+		count, _ := l.svcCtx.GalleryModel.CountByUserIdAndIllustrationId(l.ctx, forein_id, gallery.IllustrationId)
+		galleryCountData.Count = count
+		l.svcCtx.GalleryCountModel.Update(l.ctx, galleryCountData)
+	}
 
 	return &bird.GalleryResp{
 		Code: 0,
