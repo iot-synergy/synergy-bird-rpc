@@ -68,6 +68,7 @@ func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId 
 	if endTime != 0 {
 		filterDate["updateAt"] = bson.M{"$lt": time.UnixMilli(endTime)}
 	}
+	filterDate["recordState"] = 2
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
 		logx.Error(err.Error())
