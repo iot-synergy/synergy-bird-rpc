@@ -2,7 +2,6 @@ package gallery
 
 import (
 	"context"
-	"fmt"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/gallery"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
@@ -55,9 +54,6 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 			Data: nil,
 		}, nil
 	}
-	fmt.Println("ai事件：")
-	fmt.Println(aiEvent)
-	fmt.Println(aiEvent.GetOwnerId())
 	// 判断事件是否是用户的
 	if forein_id != regexp.MustCompile("^peckperk-").ReplaceAllLiteralString(aiEvent.GetOwnerId(), "") {
 		return &bird.GalleryResp{
