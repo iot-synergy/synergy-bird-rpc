@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"context"
+	"github.com/iot-synergy/synergy-bird-rpc/common"
 	"google.golang.org/grpc/metadata"
 	"strings"
 
@@ -45,16 +46,47 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryLi
 			Data: nil,
 		}, err
 	}
+	var illustrationIds = make([]string, 0)
+	for _, gallery := range *data {
+		illustrationIds = append(illustrationIds, gallery.IllustrationId)
+	}
+	illustrationIds = *common.ListDistinct(&illustrationIds)
+	illustrationList, err := l.svcCtx.IllustrationModel.FindListByIds(l.ctx, &illustrationIds)
+	if err != nil {
+		return &bird.GalleryListResp{
+			Code: -1,
+			Msg:  err.Error(),
+			Data: nil,
+		}, err
+	}
+	illustrationMap := make(map[string]bird.IllustrationsResp)
+	for _, illustration := range *illustrationList {
+		illustrationMap[illustration.ID.Hex()] = bird.IllustrationsResp{
+			Id:          illustration.ID.Hex(),
+			RecordState: int32(illustration.RecordState),
+			CreateTime:  illustration.CreateAt.UnixMilli(),
+			Title:       illustration.Title,
+			Score:       illustration.Score,
+			WikiUrl:     illustration.WikiUrl,
+			ImagePath:   illustration.ImagePath,
+			IconPath:    illustration.IconPath,
+			MoreImages:  illustration.MoreImages,
+			Typee:       illustration.Type,
+			Labels:      illustration.Labels,
+			Description: illustration.Description,
+		}
+	}
 
 	resps := make([]*bird.GalleryRespData, 0)
 	for _, gallery := range *data {
+		resp := illustrationMap[gallery.IllustrationId]
 		resps = append(resps, &bird.GalleryRespData{
 			Id:           gallery.ID.Hex(),
 			RecordState:  int32(gallery.RecordState),
 			CreateTime:   gallery.CreateAt.UnixMilli(),
 			Name:         gallery.Name,
 			UserId:       gallery.UserId,
-			Illustration: nil,
+			Illustration: &resp,
 		})
 	}
 

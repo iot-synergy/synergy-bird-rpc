@@ -5,6 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -18,6 +19,7 @@ type (
 		FindListByParamAndPage(ctx context.Context, labels []string, typee, keyword string,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 		FindOneByTitle(ctx context.Context, title string) (*Illustration, error)
+		FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error)
 	}
 
 	customIllustrationModel struct {
@@ -105,4 +107,20 @@ func (m *customIllustrationModel) FindOneByTitle(ctx context.Context, title stri
 	default:
 		return nil, err
 	}
+}
+
+func (m *customIllustrationModel) FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error) {
+	oids := make([]primitive.ObjectID, 0)
+	for _, id := range *ids {
+		oid, err := primitive.ObjectIDFromHex(id)
+		if err == nil {
+			oids = append(oids, oid)
+		}
+	}
+	data := make([]Illustration, 0)
+	err := m.conn.Find(ctx, &data, bson.M{"_id": bson.M{"$in": oids}})
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
 }
