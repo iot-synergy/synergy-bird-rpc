@@ -99,6 +99,9 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 		illustrationId := illustration.ID.Hex()
 		isUnlock := common.ListContainApi(&illustrationIdList, illustrationId)
 		var unlockTime int64
+		if isUnlock {
+			unlockTime = galleryCountMap[illustrationId].UnlockTime.UnixMilli()
+		}
 		resps = append(resps, &bird.IllustrationsRespVo{
 			Id:          illustration.ID.Hex(),
 			RecordState: int32(illustration.RecordState),
