@@ -15,7 +15,7 @@ type (
 	GalleryCountModel interface {
 		galleryCountModel
 		FindOneByUserIdAndIllustrationId(ctx context.Context, userId, illustrationId string) (*GalleryCount, error)
-		FindIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]string, error)
+		FindByIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]GalleryCount, error)
 	}
 
 	customGalleryCountModel struct {
@@ -45,7 +45,7 @@ func (m *customGalleryCountModel) FindOneByUserIdAndIllustrationId(ctx context.C
 	}
 }
 
-func (m *customGalleryCountModel) FindIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]string, error) {
+func (m *customGalleryCountModel) FindByIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]GalleryCount, error) {
 	data := make([]GalleryCount, 0)
 	filterDate := make(map[string]interface{}) //查询条件data
 	filterDate["recordState"] = 2
@@ -59,9 +59,5 @@ func (m *customGalleryCountModel) FindIllustrationIdList(ctx context.Context, us
 	filter := bson.M{} //查询条件
 	err = bson.Unmarshal(marshal, filter)
 	m.conn.Find(ctx, &data, filter)
-	resp := make([]string, 0)
-	for _, datum := range data {
-		resp = append(resp, datum.IllustrationId)
-	}
-	return &resp, nil
+	return &data, nil
 }

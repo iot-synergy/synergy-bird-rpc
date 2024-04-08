@@ -109,8 +109,8 @@ label:
 
 	//保存
 	gallery := model.Gallery{
-		UpdateAt:       time.Time{},
-		CreateAt:       time.Time{},
+		UpdateAt:       time.Now(),
+		CreateAt:       time.Now(),
 		Name:           illustration.Title,
 		UserId:         forein_id,
 		IllustrationId: illustration.ID.Hex(),
@@ -130,11 +130,15 @@ label:
 			IllustrationId: illustration.ID.Hex(),
 			Count:          1,
 			RecordState:    2,
+			UnlockTime:     gallery.CreateAt,
 		}
 		l.svcCtx.GalleryCountModel.Insert(l.ctx, galleryCountData)
 	} else {
 		count, _ := l.svcCtx.GalleryModel.CountByUserIdAndIllustrationId(l.ctx, forein_id, illustration.ID.Hex())
 		galleryCountData.Count = count
+		if count == 1 {
+			galleryCountData.UnlockTime = gallery.CreateAt
+		}
 		l.svcCtx.GalleryCountModel.Update(l.ctx, galleryCountData)
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/iot-synergy/synergy-bird-rpc/common"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
+	model2 "github.com/iot-synergy/synergy-bird-rpc/storage/galleryCount"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/label"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
 	"google.golang.org/grpc/metadata"
@@ -70,7 +71,14 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 		labelMap[label.ID.Hex()] = label
 	}
 	//判断图鉴是否是用户已解锁的
-	illustrationIdList, _ := l.svcCtx.GalleryCountModel.FindIllustrationIdList(l.ctx, forein_id, illustrationIds)
+	galleryCounts, _ := l.svcCtx.GalleryCountModel.FindByIllustrationIdList(l.ctx, forein_id, illustrationIds)
+	illustrationIdList := make([]string, 0)
+	galleryCountMap := make(map[string]model2.GalleryCount)
+	for _, galleryCount := range *galleryCounts {
+		illustrationIdList = append(illustrationIdList, galleryCount.IllustrationId)
+		galleryCountMap[galleryCount.IllustrationId] = galleryCount
+	}
+
 	resps := make([]*bird.IllustrationsRespVo, 0) //结果集
 	for _, illustration := range *data {
 		labelResps := make([]*bird.LabelResp, 0) //图鉴的标签列表
@@ -89,7 +97,8 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			}
 		}
 		illustrationId := illustration.ID.Hex()
-		isUnlock := common.ListContainApi(illustrationIdList, illustrationId)
+		isUnlock := common.ListContainApi(&illustrationIdList, illustrationId)
+		var unlockTime int64
 		resps = append(resps, &bird.IllustrationsRespVo{
 			Id:          illustration.ID.Hex(),
 			RecordState: int32(illustration.RecordState),
@@ -104,6 +113,7 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			Labels:      labelResps,
 			Description: illustration.Description,
 			IsUnlock:    &isUnlock,
+			UnlockTime:  &unlockTime,
 		})
 	}
 	return &bird.IllustrationsListVo{

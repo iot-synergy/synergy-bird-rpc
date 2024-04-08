@@ -157,6 +157,7 @@ message IllustrationsRespVo {
   repeated LabelResp labels = 11;
   string description = 12;
   optional bool isUnlock = 13;
+  optional int64 unlockTime = 14;
 }
 
 message IllustrationsListResp {

@@ -15,6 +15,7 @@ type GalleryCount struct {
 	UserId         string    `bson:"userId,omitempty" json:"userId,omitempty"`
 	IllustrationId string    `bson:"illustrationId,omitempty" json:"illustrationId,omitempty"`
 	Count          int64     `bson:"count,omitempty" json:"count,omitempty"`
+	UnlockTime     time.Time `bson:"unlockTime,omitempty" json:"unlockTime,omitempty"`
 	//1:Created
 	//2:Normal
 	//3:Deleted
