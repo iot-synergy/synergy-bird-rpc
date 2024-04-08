@@ -156,6 +156,7 @@ message IllustrationsRespVo {
   string typee = 10;
   repeated LabelResp labels = 11;
   string description = 12;
+  optional bool isUnlock = 13;
 }
 
 message IllustrationsListResp {

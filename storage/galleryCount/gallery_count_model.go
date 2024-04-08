@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -14,6 +15,7 @@ type (
 	GalleryCountModel interface {
 		galleryCountModel
 		FindOneByUserIdAndIllustrationId(ctx context.Context, userId, illustrationId string) (*GalleryCount, error)
+		FindIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]string, error)
 	}
 
 	customGalleryCountModel struct {
@@ -41,4 +43,25 @@ func (m *customGalleryCountModel) FindOneByUserIdAndIllustrationId(ctx context.C
 	default:
 		return nil, err
 	}
+}
+
+func (m *customGalleryCountModel) FindIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]string, error) {
+	data := make([]GalleryCount, 0)
+	filterDate := make(map[string]interface{}) //查询条件data
+	filterDate["recordState"] = 2
+	filterDate["count"] = bson.M{"$gt": 0}
+	filterDate["illustrationId"] = bson.M{"$in": illustrationIds}
+	marshal, err := bson.Marshal(filterDate)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	filter := bson.M{} //查询条件
+	err = bson.Unmarshal(marshal, filter)
+	m.conn.Find(ctx, &data, filter)
+	resp := make([]string, 0)
+	for _, datum := range data {
+		resp = append(resp, datum.IllustrationId)
+	}
+	return &resp, nil
 }

@@ -2,9 +2,12 @@ package illustration
 
 import (
 	"context"
+	"github.com/iot-synergy/synergy-bird-rpc/common"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/label"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
+	"google.golang.org/grpc/metadata"
+	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,6 +27,17 @@ func NewFindIllustrationByPageLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsListReq) (*bird.IllustrationsListVo, error) {
+	// 获取用户id
+	value := metadata.ValueFromIncomingContext(l.ctx, "gateway-firebaseid")
+	if len(value) <= 0 {
+		return &bird.IllustrationsListVo{
+			Code:    -1,
+			Message: "用户未登录",
+			Data:    nil,
+		}, nil
+	}
+	forein_id := strings.Join(value, "")
+
 	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), 2, in.Page, in.PageSize)
 	if err != nil {
 		return &bird.IllustrationsListVo{
@@ -33,8 +47,11 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 	}
 	//获得去重的标签id
 	labelIdMap := make(map[string]string)
+	//获得图鉴id集合
+	illustrationIds := make([]string, 0)
 	labelIds := make([]string, 0)
 	for _, illustration := range *data {
+		illustrationIds = append(illustrationIds, illustration.ID.Hex())
 		for _, label := range illustration.Labels {
 			labelIdMap[label] = ""
 		}
@@ -52,6 +69,8 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 	for _, label := range *labels {
 		labelMap[label.ID.Hex()] = label
 	}
+	//判断图鉴是否是用户已解锁的
+	illustrationIdList, _ := l.svcCtx.GalleryCountModel.FindIllustrationIdList(l.ctx, forein_id, illustrationIds)
 	resps := make([]*bird.IllustrationsRespVo, 0) //结果集
 	for _, illustration := range *data {
 		labelResps := make([]*bird.LabelResp, 0) //图鉴的标签列表
@@ -69,6 +88,8 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 				})
 			}
 		}
+		illustrationId := illustration.ID.Hex()
+		isUnlock := common.ListContainApi(illustrationIdList, illustrationId)
 		resps = append(resps, &bird.IllustrationsRespVo{
 			Id:          illustration.ID.Hex(),
 			RecordState: int32(illustration.RecordState),
@@ -82,6 +103,7 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			Typee:       illustration.Type,
 			Labels:      labelResps,
 			Description: illustration.Description,
+			IsUnlock:    &isUnlock,
 		})
 	}
 	return &bird.IllustrationsListVo{

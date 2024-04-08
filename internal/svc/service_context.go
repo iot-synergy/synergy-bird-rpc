@@ -26,7 +26,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		GalleryModel:      model.NewGalleryModel(c.MonDb.Url, c.MonDb.DbName, "gallery"),
 		IllustrationModel: model2.NewIllustrationModel(c.MonDb.Url, c.MonDb.DbName, "illustration"),
 		LabelModel:        model3.NewLabelModel(c.MonDb.Url, c.MonDb.DbName, "label"),
-		GalleryCountModel: model4.NewGalleryCountModel(c.MonDb.Url, c.MonDb.DbName, "label"),
+		GalleryCountModel: model4.NewGalleryCountModel(c.MonDb.Url, c.MonDb.DbName, "gallery_count"),
 		EventRpc:          synergyeventclient.NewSynergyEvent(zrpc.MustNewClient(c.EventRpc)),
 	}
 }
