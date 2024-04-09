@@ -20,6 +20,8 @@ type (
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 		FindOneByTitle(ctx context.Context, title string) (*Illustration, error)
 		FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error)
+		FindPageJoinGallery(ctx context.Context, labels []string, foreinId, typee, keyword string, isUnlock *bool,
+			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 	}
 
 	customIllustrationModel struct {
@@ -123,4 +125,120 @@ func (m *customIllustrationModel) FindListByIds(ctx context.Context, ids *[]stri
 		return nil, err
 	}
 	return &data, nil
+}
+
+func (m *customIllustrationModel) FindPageJoinGallery(ctx context.Context, labels []string, foreinId, typee, keyword string, isUnlock *bool,
+	state int32, page, pageSize uint64) (*[]Illustration, int64, error) {
+	data := make([]Illustration, 0)
+	lookup := bson.M{"from": "gallery_count", "localField": "title", "foreignField": "name", "as": "galleryCount"}
+	filterDate := make(map[string]interface{}) //查询条件data
+	if keyword != "" && (isUnlock == nil || *isUnlock == true) {
+		var filterKeyword [2]map[string]interface{}
+		filterKeyTitle := make(map[string]string)
+		filterKeyTitle["$regex"] = keyword
+		filterKeyDesc := make(map[string]string)
+		filterKeyDesc["$regex"] = keyword
+		filterKeyword[0] = make(map[string]interface{})
+		filterKeyword[0]["title"] = filterKeyTitle
+		filterKeyword[1] = make(map[string]interface{})
+		filterKeyword[1]["description"] = filterKeyDesc
+		filterDate["$or"] = filterKeyword
+	}
+	if isUnlock != nil {
+		if *isUnlock == true {
+			filterDate["galleryCount.userId"] = foreinId
+			filterDate["galleryCount._id"] = bson.M{"$exists": true}
+			filterDate["galleryCount.recordState"] = 2
+			filterDate["galleryCount.count"] = bson.M{"$gte": 1}
+		} else if keyword == "" {
+			var filterGallery [4]map[string]interface{}
+			filterGallery[0] = bson.M{"galleryCount._id": bson.M{"$exists": false}}
+			filterGallery[1] = bson.M{"galleryCount.userId": bson.M{"$ne": foreinId}}
+			filterGallery[2] = bson.M{"galleryCount.recordState": bson.M{"$ne": 2}}
+			filterGallery[3] = bson.M{"galleryCount.count": bson.M{"$lt": 1}}
+			filterDate["$or"] = filterGallery
+		} else {
+			var filterKeywordGallery [2]map[string]interface{}
+			var filterKeyword [2]map[string]interface{}
+			filterKeyTitle := make(map[string]string)
+			filterKeyTitle["$regex"] = keyword
+			filterKeyDesc := make(map[string]string)
+			filterKeyDesc["$regex"] = keyword
+			filterKeyword[0] = make(map[string]interface{})
+			filterKeyword[0]["title"] = filterKeyTitle
+			filterKeyword[1] = make(map[string]interface{})
+			filterKeyword[1]["description"] = filterKeyDesc
+			var filterGallery [4]map[string]interface{}
+			filterGallery[0] = bson.M{"galleryCount._id": bson.M{"$exists": false}}
+			filterGallery[1] = bson.M{"galleryCount.userId": bson.M{"$ne": foreinId}}
+			filterGallery[2] = bson.M{"galleryCount.recordState": bson.M{"$ne": 2}}
+			filterGallery[3] = bson.M{"galleryCount.count": bson.M{"$lt": 1}}
+			filterKeywordGallery[0] = make(map[string]interface{})
+			filterKeywordGallery[0]["$or"] = filterKeyword
+			filterKeywordGallery[1] = make(map[string]interface{})
+			filterKeywordGallery[1]["$or"] = filterGallery
+			filterDate["$and"] = filterKeywordGallery
+		}
+	}
+	if labels != nil && len(labels) > 0 {
+		filterLabels := make(map[string][]string)
+		filterLabels["$in"] = labels
+		filterDate["labels"] = filterLabels
+	}
+	if typee != "" {
+		filterDate["type"] = typee
+	}
+	if state != 0 {
+		filterDate["recordState"] = state
+	} else {
+		filterDate["recordState"] = bson.M{"$ne": 4}
+	}
+	marshal, err := bson.Marshal(filterDate)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, 0, err
+	}
+	match := bson.M{} //查询条件
+	err = bson.Unmarshal(marshal, match)
+
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, 0, err
+	}
+
+	project := bson.M{
+		"_id":         1,
+		"updateAt":    1,
+		"createAt":    1,
+		"title":       1,
+		"score":       1,
+		"wikiUrl":     1,
+		"imagePath":   1,
+		"iconPath":    1,
+		"moreImages":  1,
+		"type":        1,
+		"labels":      1,
+		"description": 1,
+		"recordState": 1,
+	}
+
+	filter := bson.A{bson.M{"$lookup": lookup}, bson.M{"$match": match}, bson.M{"$project": project}, bson.M{"$limit": pageSize}, bson.M{"$skip": (page - 1) * pageSize}}
+	countFilter := bson.A{bson.M{"$lookup": lookup}, bson.M{"$match": match}, bson.M{"$group": bson.M{"_id": "", "count": bson.M{"$sum": 1}}}}
+
+	err = m.conn.Aggregate(ctx, &data, filter)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, 0, err
+	}
+	countDO := make([]CountDO, 0)
+	err = m.conn.Aggregate(ctx, &countDO, countFilter)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, 0, err
+	}
+	var count int64
+	for _, do := range countDO {
+		count += do.Count
+	}
+	return &data, count, err
 }

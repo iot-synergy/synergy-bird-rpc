@@ -54,7 +54,7 @@ func (s *BirdServer) IllustrationList(ctx context.Context, in *bird.Illustration
 	return l.IllustrationList(in)
 }
 
-func (s *BirdServer) FindIllustrationByPage(ctx context.Context, in *bird.IllustrationsListReq) (*bird.IllustrationsListVo, error) {
+func (s *BirdServer) FindIllustrationByPage(ctx context.Context, in *bird.IllustrationsPageReq) (*bird.IllustrationsListVo, error) {
 	l := illustration.NewFindIllustrationByPageLogic(ctx, s.svcCtx)
 	return l.FindIllustrationByPage(in)
 }

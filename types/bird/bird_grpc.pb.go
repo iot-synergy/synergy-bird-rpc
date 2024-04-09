@@ -56,7 +56,7 @@ type BirdClient interface {
 	// group: illustration
 	IllustrationList(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListResp, error)
 	// group: illustration
-	FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
+	FindIllustrationByPage(ctx context.Context, in *IllustrationsPageReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
 	// group: illustration
 	PublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 	// group: illustration
@@ -143,7 +143,7 @@ func (c *birdClient) IllustrationList(ctx context.Context, in *IllustrationsList
 	return out, nil
 }
 
-func (c *birdClient) FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error) {
+func (c *birdClient) FindIllustrationByPage(ctx context.Context, in *IllustrationsPageReq, opts ...grpc.CallOption) (*IllustrationsListVo, error) {
 	out := new(IllustrationsListVo)
 	err := c.cc.Invoke(ctx, Bird_FindIllustrationByPage_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -268,7 +268,7 @@ type BirdServer interface {
 	// group: illustration
 	IllustrationList(context.Context, *IllustrationsListReq) (*IllustrationsListResp, error)
 	// group: illustration
-	FindIllustrationByPage(context.Context, *IllustrationsListReq) (*IllustrationsListVo, error)
+	FindIllustrationByPage(context.Context, *IllustrationsPageReq) (*IllustrationsListVo, error)
 	// group: illustration
 	PublishIllustration(context.Context, *IdReq) (*IllustrationsResp, error)
 	// group: illustration
@@ -316,7 +316,7 @@ func (UnimplementedBirdServer) IllustrationUpdate(context.Context, *Illustration
 func (UnimplementedBirdServer) IllustrationList(context.Context, *IllustrationsListReq) (*IllustrationsListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IllustrationList not implemented")
 }
-func (UnimplementedBirdServer) FindIllustrationByPage(context.Context, *IllustrationsListReq) (*IllustrationsListVo, error) {
+func (UnimplementedBirdServer) FindIllustrationByPage(context.Context, *IllustrationsPageReq) (*IllustrationsListVo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindIllustrationByPage not implemented")
 }
 func (UnimplementedBirdServer) PublishIllustration(context.Context, *IdReq) (*IllustrationsResp, error) {
@@ -474,7 +474,7 @@ func _Bird_IllustrationList_Handler(srv interface{}, ctx context.Context, dec fu
 }
 
 func _Bird_FindIllustrationByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IllustrationsListReq)
+	in := new(IllustrationsPageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -486,7 +486,7 @@ func _Bird_FindIllustrationByPage_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: Bird_FindIllustrationByPage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BirdServer).FindIllustrationByPage(ctx, req.(*IllustrationsListReq))
+		return srv.(BirdServer).FindIllustrationByPage(ctx, req.(*IllustrationsPageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

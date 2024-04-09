@@ -119,6 +119,16 @@ message IllustrationsListReq {
   uint64 pageSize = 6;
 }
 
+message IllustrationsPageReq {
+  repeated string labels = 1;
+  optional string typee = 2;
+  optional int32 state = 3;
+  optional string keyword = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+  optional bool isUnlock = 7;
+}
+
 
 message IllustrationsResp {
   string id = 1;
@@ -268,7 +278,7 @@ service bird {
   //  group: illustration
   rpc illustrationList(IllustrationsListReq) returns (IllustrationsListResp);
   //  group: illustration
-  rpc findIllustrationByPage(IllustrationsListReq) returns (IllustrationsListVo);
+  rpc findIllustrationByPage(IllustrationsPageReq) returns (IllustrationsListVo);
   //  group: illustration
   rpc publishIllustration(IdReq) returns (IllustrationsResp);
   //  group: illustration

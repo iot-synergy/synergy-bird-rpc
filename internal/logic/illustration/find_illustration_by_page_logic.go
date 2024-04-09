@@ -7,10 +7,9 @@ import (
 	model2 "github.com/iot-synergy/synergy-bird-rpc/storage/galleryCount"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/label"
 	"github.com/iot-synergy/synergy-bird-rpc/types/bird"
+	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/metadata"
 	"strings"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type FindIllustrationByPageLogic struct {
@@ -27,7 +26,7 @@ func NewFindIllustrationByPageLogic(ctx context.Context, svcCtx *svc.ServiceCont
 	}
 }
 
-func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsListReq) (*bird.IllustrationsListVo, error) {
+func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsPageReq) (*bird.IllustrationsListVo, error) {
 	// 获取用户id
 	value := metadata.ValueFromIncomingContext(l.ctx, "gateway-firebaseid")
 	if len(value) <= 0 {
@@ -38,8 +37,9 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 		}, nil
 	}
 	forein_id := strings.Join(value, "")
-
-	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), 2, in.Page, in.PageSize)
+	data, count, err :=
+		l.svcCtx.IllustrationModel.FindPageJoinGallery(l.ctx, in.Labels, forein_id, in.GetTypee(), in.GetKeyword(), in.IsUnlock, 2, in.Page, in.PageSize)
+	//data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), 2, in.Page, in.PageSize)
 	if err != nil {
 		return &bird.IllustrationsListVo{
 			Code:    -1,

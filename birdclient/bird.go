@@ -27,6 +27,7 @@ type (
 	IllustrationsListResp   = bird.IllustrationsListResp
 	IllustrationsListVo     = bird.IllustrationsListVo
 	IllustrationsListVoData = bird.IllustrationsListVoData
+	IllustrationsPageReq    = bird.IllustrationsPageReq
 	IllustrationsResp       = bird.IllustrationsResp
 	IllustrationsRespVo     = bird.IllustrationsRespVo
 	IllustrationsUpdateReq  = bird.IllustrationsUpdateReq
@@ -46,7 +47,7 @@ type (
 		IllustrationCreate(ctx context.Context, in *IllustrationsCreateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		IllustrationUpdate(ctx context.Context, in *IllustrationsUpdateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		IllustrationList(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListResp, error)
-		FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
+		FindIllustrationByPage(ctx context.Context, in *IllustrationsPageReq, opts ...grpc.CallOption) (*IllustrationsListVo, error)
 		PublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		UnpublishIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		DeleteIllustration(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
@@ -101,7 +102,7 @@ func (m *defaultBird) IllustrationList(ctx context.Context, in *IllustrationsLis
 	return client.IllustrationList(ctx, in, opts...)
 }
 
-func (m *defaultBird) FindIllustrationByPage(ctx context.Context, in *IllustrationsListReq, opts ...grpc.CallOption) (*IllustrationsListVo, error) {
+func (m *defaultBird) FindIllustrationByPage(ctx context.Context, in *IllustrationsPageReq, opts ...grpc.CallOption) (*IllustrationsListVo, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.FindIllustrationByPage(ctx, in, opts...)
 }
