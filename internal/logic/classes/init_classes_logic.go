@@ -32,7 +32,7 @@ func NewInitClassesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitC
 }
 
 func (l *InitClassesLogic) InitClasses(in *bird.NullReq) (*bird.BooleanResp, error) {
-	classesListFile, err := os.Open("./txt/classes_list.txt")
+	classesListFile, err := os.Open("./etc/txt/classes_list.txt")
 	if err != nil {
 		return &bird.BooleanResp{
 			Code:    -1,
@@ -41,7 +41,7 @@ func (l *InitClassesLogic) InitClasses(in *bird.NullReq) (*bird.BooleanResp, err
 		}, err
 	}
 	defer classesListFile.Close()
-	classesChineseListFile, err := os.Open("./txt/classes_Chinese_list.txt")
+	classesChineseListFile, err := os.Open("./etc/txt/classes_Chinese_list.txt")
 	if err != nil {
 		return &bird.BooleanResp{
 			Code:    -1,
@@ -50,7 +50,7 @@ func (l *InitClassesLogic) InitClasses(in *bird.NullReq) (*bird.BooleanResp, err
 		}, err
 	}
 	defer classesChineseListFile.Close()
-	classesEnglishListFile, err := os.Open("./txt/classes_English_list.txt")
+	classesEnglishListFile, err := os.Open("./etc/txt/classes_English_list.txt")
 	if err != nil {
 		return &bird.BooleanResp{
 			Code:    -1,
@@ -131,7 +131,7 @@ func (l *InitClassesLogic) InitClasses(in *bird.NullReq) (*bird.BooleanResp, err
 }
 
 func InitClassesOne(l *InitClassesLogic) error {
-	classesListFile, err := os.Open("./txt/classes_list.txt")
+	classesListFile, err := os.Open("./etc/txt/classes_list.txt")
 	if err != nil {
 		return err
 	}
@@ -169,7 +169,7 @@ func InitClassesOne(l *InitClassesLogic) error {
 	return nil
 }
 func InitClassesChineseName(l *InitClassesLogic) error {
-	classesChineseListFile, err := os.Open("./txt/classes_Chinese_list.txt")
+	classesChineseListFile, err := os.Open("./etc/txt/classes_Chinese_list.txt")
 	if err != nil {
 		return err
 	}
@@ -200,7 +200,7 @@ func InitClassesChineseName(l *InitClassesLogic) error {
 	return nil
 }
 func InitClassesEnglishName(l *InitClassesLogic) error {
-	classesEnglishListFile, err := os.Open("./txt/classes_English_list.txt")
+	classesEnglishListFile, err := os.Open("./etc/txt/classes_English_list.txt")
 	if err != nil {
 		return err
 	}
