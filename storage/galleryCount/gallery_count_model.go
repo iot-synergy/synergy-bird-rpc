@@ -51,6 +51,7 @@ func (m *customGalleryCountModel) FindByIllustrationIdList(ctx context.Context, 
 	filterDate["recordState"] = 2
 	filterDate["count"] = bson.M{"$gt": 0}
 	filterDate["illustrationId"] = bson.M{"$in": illustrationIds}
+	filterDate["userId"] = userId
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
 		logx.Error(err.Error())
