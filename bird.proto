@@ -95,7 +95,7 @@ message IllustrationsUpdateReq {
   //3:Deleted
   //4:Forbidden
   optional int32 recordState = 2;
-  int64 classesId = 3;
+  optional int64 classesId = 3;
   optional double score = 4;
   optional string wikiUrl = 5;
   optional string imagePath = 6;
