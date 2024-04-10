@@ -6,6 +6,7 @@ package server
 import (
 	"context"
 
+	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/classes"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/gallery"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/illustration"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/label"
@@ -112,4 +113,14 @@ func (s *BirdServer) UnpublishLabel(ctx context.Context, in *bird.IdReq) (*bird.
 func (s *BirdServer) DeleteLabel(ctx context.Context, in *bird.IdReq) (*bird.BooleanResp, error) {
 	l := label.NewDeleteLabelLogic(ctx, s.svcCtx)
 	return l.DeleteLabel(in)
+}
+
+func (s *BirdServer) InitClasses(ctx context.Context, in *bird.NullReq) (*bird.BooleanResp, error) {
+	l := classes.NewInitClassesLogic(ctx, s.svcCtx)
+	return l.InitClasses(in)
+}
+
+func (s *BirdServer) ClassesList(ctx context.Context, in *bird.ClassesListReq) (*bird.ClassesListResp, error) {
+	l := classes.NewClassesListLogic(ctx, s.svcCtx)
+	return l.ClassesList(in)
 }

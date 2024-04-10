@@ -264,6 +264,31 @@ message BooleanResp {
   bool data = 3;
 }
 
+message NullReq {
+
+}
+
+message ClassesListReq {
+  optional string keyword = 1;
+  uint64 page = 2;
+  uint64 pageSize = 3;
+}
+
+message ClassesListResp {
+  int64 code = 1;
+  string msg = 2;
+  int64 total = 3;
+  repeated ClassesData data = 4;
+}
+
+message ClassesData {
+  string id = 1;
+  int64 ClassesId = 2;
+  string ClassesName = 3;
+  string ChineseName = 4;
+  string EnglishName = 5;
+}
+
 service bird {
   //  group: gallery
   rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
@@ -301,4 +326,8 @@ service bird {
   rpc unpublishLabel(IdReq) returns (LabelResp);
   //  group: label
   rpc deleteLabel(IdReq) returns(BooleanResp);
+  //  group: classes
+  rpc initClasses(NullReq) returns(BooleanResp);
+  //  group: classes
+  rpc classesList(ClassesListReq) returns(ClassesListResp);
 }

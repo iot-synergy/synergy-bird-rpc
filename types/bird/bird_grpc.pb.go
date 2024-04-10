@@ -37,6 +37,8 @@ const (
 	Bird_PublishLabel_FullMethodName           = "/bird.bird/publishLabel"
 	Bird_UnpublishLabel_FullMethodName         = "/bird.bird/unpublishLabel"
 	Bird_DeleteLabel_FullMethodName            = "/bird.bird/deleteLabel"
+	Bird_InitClasses_FullMethodName            = "/bird.bird/initClasses"
+	Bird_ClassesList_FullMethodName            = "/bird.bird/classesList"
 )
 
 // BirdClient is the client API for Bird service.
@@ -79,6 +81,10 @@ type BirdClient interface {
 	UnpublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
 	// group: label
 	DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
+	// group: classes
+	InitClasses(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*BooleanResp, error)
+	// group: classes
+	ClassesList(ctx context.Context, in *ClassesListReq, opts ...grpc.CallOption) (*ClassesListResp, error)
 }
 
 type birdClient struct {
@@ -251,6 +257,24 @@ func (c *birdClient) DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *birdClient) InitClasses(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*BooleanResp, error) {
+	out := new(BooleanResp)
+	err := c.cc.Invoke(ctx, Bird_InitClasses_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) ClassesList(ctx context.Context, in *ClassesListReq, opts ...grpc.CallOption) (*ClassesListResp, error) {
+	out := new(ClassesListResp)
+	err := c.cc.Invoke(ctx, Bird_ClassesList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BirdServer is the server API for Bird service.
 // All implementations must embed UnimplementedBirdServer
 // for forward compatibility
@@ -291,6 +315,10 @@ type BirdServer interface {
 	UnpublishLabel(context.Context, *IdReq) (*LabelResp, error)
 	// group: label
 	DeleteLabel(context.Context, *IdReq) (*BooleanResp, error)
+	// group: classes
+	InitClasses(context.Context, *NullReq) (*BooleanResp, error)
+	// group: classes
+	ClassesList(context.Context, *ClassesListReq) (*ClassesListResp, error)
 	mustEmbedUnimplementedBirdServer()
 }
 
@@ -351,6 +379,12 @@ func (UnimplementedBirdServer) UnpublishLabel(context.Context, *IdReq) (*LabelRe
 }
 func (UnimplementedBirdServer) DeleteLabel(context.Context, *IdReq) (*BooleanResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLabel not implemented")
+}
+func (UnimplementedBirdServer) InitClasses(context.Context, *NullReq) (*BooleanResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitClasses not implemented")
+}
+func (UnimplementedBirdServer) ClassesList(context.Context, *ClassesListReq) (*ClassesListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClassesList not implemented")
 }
 func (UnimplementedBirdServer) mustEmbedUnimplementedBirdServer() {}
 
@@ -689,6 +723,42 @@ func _Bird_DeleteLabel_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bird_InitClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NullReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).InitClasses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_InitClasses_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).InitClasses(ctx, req.(*NullReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_ClassesList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClassesListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).ClassesList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_ClassesList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).ClassesList(ctx, req.(*ClassesListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Bird_ServiceDesc is the grpc.ServiceDesc for Bird service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -767,6 +837,14 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "deleteLabel",
 			Handler:    _Bird_DeleteLabel_Handler,
+		},
+		{
+			MethodName: "initClasses",
+			Handler:    _Bird_InitClasses_Handler,
+		},
+		{
+			MethodName: "classesList",
+			Handler:    _Bird_ClassesList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

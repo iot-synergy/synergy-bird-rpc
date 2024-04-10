@@ -14,6 +14,9 @@ import (
 
 type (
 	BooleanResp             = bird.BooleanResp
+	ClassesData             = bird.ClassesData
+	ClassesListReq          = bird.ClassesListReq
+	ClassesListResp         = bird.ClassesListResp
 	GalleryCreateReq        = bird.GalleryCreateReq
 	GalleryListReq          = bird.GalleryListReq
 	GalleryListResp         = bird.GalleryListResp
@@ -39,6 +42,7 @@ type (
 	LabelResp               = bird.LabelResp
 	LabelUpdateReq          = bird.LabelUpdateReq
 	LabelVo                 = bird.LabelVo
+	NullReq                 = bird.NullReq
 
 	Bird interface {
 		GalleryCreate(ctx context.Context, in *GalleryCreateReq, opts ...grpc.CallOption) (*GalleryResp, error)
@@ -59,6 +63,8 @@ type (
 		PublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
 		UnpublishLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*LabelResp, error)
 		DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
+		InitClasses(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*BooleanResp, error)
+		ClassesList(ctx context.Context, in *ClassesListReq, opts ...grpc.CallOption) (*ClassesListResp, error)
 	}
 
 	defaultBird struct {
@@ -160,4 +166,14 @@ func (m *defaultBird) UnpublishLabel(ctx context.Context, in *IdReq, opts ...grp
 func (m *defaultBird) DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.DeleteLabel(ctx, in, opts...)
+}
+
+func (m *defaultBird) InitClasses(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*BooleanResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.InitClasses(ctx, in, opts...)
+}
+
+func (m *defaultBird) ClassesList(ctx context.Context, in *ClassesListReq, opts ...grpc.CallOption) (*ClassesListResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.ClassesList(ctx, in, opts...)
 }
