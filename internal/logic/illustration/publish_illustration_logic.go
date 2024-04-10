@@ -59,5 +59,8 @@ func (l *PublishIllustrationLogic) PublishIllustration(in *bird.IdReq) (*bird.Il
 		Typee:       illustration.Type,
 		Labels:      illustration.Labels,
 		Description: illustration.Description,
+		ClassesId:   illustration.ClassesId,
+		ChineseName: illustration.ChineseName,
+		EnglishName: illustration.EnglishName,
 	}, nil
 }

@@ -38,8 +38,24 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		return nil, errors.New("没有对应记录")
 	}
 	illustration.UpdateAt = time.Now()
-	if in.GetTitle() != "" {
-		illustration.Title = in.GetTitle()
+	if in.GetClassesId() != illustration.ClassesId {
+		classes, err := l.svcCtx.ClassesModel.FindOneByClassesId(l.ctx, in.ClassesId)
+		if err != nil {
+			logx.Error(err.Error())
+			return nil, err
+		}
+		data, err := l.svcCtx.IllustrationModel.FindOneByTitle(l.ctx, classes.ClassesName)
+		if err != nil {
+			logx.Error(err.Error())
+			return nil, err
+		}
+		if data != nil && data.RecordState != 4 {
+			return nil, errors.New("图鉴已创建过了")
+		}
+		illustration.Title = classes.ClassesName
+		illustration.ClassesId = classes.ClassesId
+		illustration.ChineseName = classes.ChineseName
+		illustration.EnglishName = classes.EnglishName
 	}
 	if in.Score != nil {
 		illustration.Score = in.GetScore()

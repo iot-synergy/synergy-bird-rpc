@@ -77,7 +77,7 @@ message IllustrationsCreateReq {
   //3:Deleted
   //4:Forbidden
   int32 recordState = 2;
-  string title = 3;
+  int64 classesId = 3;
   double score = 4;
   string wikiUrl = 5;
   string imagePath = 6;
@@ -95,7 +95,7 @@ message IllustrationsUpdateReq {
   //3:Deleted
   //4:Forbidden
   optional int32 recordState = 2;
-  optional string title = 3;
+  int64 classesId = 3;
   optional double score = 4;
   optional string wikiUrl = 5;
   optional string imagePath = 6;
@@ -147,6 +147,9 @@ message IllustrationsResp {
   string typee = 10;
   repeated string labels = 11;
   string description = 12;
+  int64 classesId = 13;
+  string chineseName = 14;
+  string englishName = 15;
 }
 
 message IllustrationsRespVo {
@@ -166,8 +169,11 @@ message IllustrationsRespVo {
   string typee = 10;
   repeated LabelResp labels = 11;
   string description = 12;
-  optional bool isUnlock = 13;
-  optional int64 unlockTime = 14;
+  int64 classesId = 13;
+  string chineseName = 14;
+  string englishName = 15;
+  optional bool isUnlock = 16;
+  optional int64 unlockTime = 17;
 }
 
 message IllustrationsListResp {

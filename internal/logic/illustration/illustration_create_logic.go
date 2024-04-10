@@ -2,6 +2,7 @@ package illustration
 
 import (
 	"context"
+	"errors"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
 	"time"
 
@@ -26,10 +27,24 @@ func NewIllustrationCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreateReq) (*bird.IllustrationsResp, error) {
-	illustration := model.Illustration{
-		UpdateAt:    time.Time{},
-		CreateAt:    time.Time{},
-		Title:       in.Title,
+	classes, err := l.svcCtx.ClassesModel.FindOneByClassesId(l.ctx, in.ClassesId)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	illustration, err := l.svcCtx.IllustrationModel.FindOneByTitle(l.ctx, classes.ClassesName)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	if illustration != nil && illustration.RecordState != 4 {
+		return nil, errors.New("图鉴已创建过了")
+	}
+
+	illustration = &model.Illustration{
+		UpdateAt:    time.Now(),
+		CreateAt:    time.Now(),
+		Title:       classes.ClassesName,
 		Score:       in.Score,
 		WikiUrl:     in.WikiUrl,
 		ImagePath:   in.ImagePath,
@@ -38,6 +53,9 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		Type:        in.Typee,
 		Labels:      make([]string, 0),
 		Description: in.Description,
+		ClassesId:   in.ClassesId,
+		ChineseName: classes.ChineseName,
+		EnglishName: classes.EnglishName,
 	}
 	if in.RecordState == 2 {
 		illustration.RecordState = 2
@@ -52,7 +70,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 	for _, label := range *labels {
 		illustration.Labels = append(illustration.Labels, label.ID.Hex())
 	}
-	err = l.svcCtx.IllustrationModel.Insert(l.ctx, &illustration)
+	err = l.svcCtx.IllustrationModel.Insert(l.ctx, illustration)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err

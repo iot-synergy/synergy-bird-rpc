@@ -24,5 +24,8 @@ type Illustration struct {
 	// 2:Normal
 	// 3:Deleted
 	// 4:Forbidden
-	RecordState int8 `bson:"recordState,omitempty" json:"recordState,omitempty"`
+	RecordState int8   `bson:"recordState,omitempty" json:"recordState,omitempty"`
+	ChineseName string `bson:"chineseName,omitempty" json:"chineseName,omitempty"`
+	EnglishName string `bson:"englishName,omitempty" json:"englishName,omitempty"`
+	ClassesId   int64  `bson:"classesId" json:"classesId"`
 }

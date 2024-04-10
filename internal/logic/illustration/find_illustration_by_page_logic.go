@@ -117,6 +117,9 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 			Description: illustration.Description,
 			IsUnlock:    &isUnlock,
 			UnlockTime:  &unlockTime,
+			ClassesId:   illustration.ClassesId,
+			ChineseName: illustration.ChineseName,
+			EnglishName: illustration.EnglishName,
 		})
 	}
 	return &bird.IllustrationsListVo{

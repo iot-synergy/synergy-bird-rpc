@@ -84,6 +84,9 @@ func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) 
 			Typee:       illustration.Type,
 			Labels:      labelResps,
 			Description: illustration.Description,
+			ClassesId:   illustration.ClassesId,
+			ChineseName: illustration.ChineseName,
+			EnglishName: illustration.EnglishName,
 		})
 	}
 	return &bird.IllustrationsListResp{
