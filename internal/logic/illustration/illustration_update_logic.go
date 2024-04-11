@@ -49,7 +49,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 			logx.Error(err.Error())
 			return nil, err
 		}
-		if data != nil && data.RecordState != 4 {
+		if data != nil && data.Title != "" && data.RecordState != 4 {
 			return nil, errors.New("图鉴已创建过了")
 		}
 		illustration.Title = classes.ClassesName
