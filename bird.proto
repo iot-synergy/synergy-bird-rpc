@@ -38,6 +38,7 @@ message GalleryListReq {
   optional int64 endTime = 4;
   uint64 page = 5;
   uint64 pageSize = 6;
+  repeated string labelIds = 7;
 }
 
 message GalleryResp {

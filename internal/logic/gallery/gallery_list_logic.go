@@ -2,7 +2,6 @@ package gallery
 
 import (
 	"context"
-	"github.com/iot-synergy/synergy-bird-rpc/common"
 	"google.golang.org/grpc/metadata"
 	"strings"
 
@@ -38,48 +37,37 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryLi
 	}
 	forein_id := strings.Join(value, "")
 	data, count, err := l.svcCtx.GalleryModel.FindListByParamAndPage(l.ctx, forein_id, in.GetIllustrationId(),
-		in.GetName(), in.GetStartTime(), in.GetEndTime(), in.Page, in.PageSize)
+		in.GetName(), in.GetStartTime(), in.GetEndTime(), in.Page, in.PageSize, &in.LabelIds)
 	if err != nil {
 		return &bird.GalleryListResp{
 			Code: -1,
 			Msg:  err.Error(),
 			Data: nil,
 		}, err
-	}
-	var illustrationIds = make([]string, 0)
-	for _, gallery := range *data {
-		illustrationIds = append(illustrationIds, gallery.IllustrationId)
-	}
-	illustrationIds = *common.ListDistinct(&illustrationIds)
-	illustrationList, err := l.svcCtx.IllustrationModel.FindListByIds(l.ctx, &illustrationIds)
-	if err != nil {
-		return &bird.GalleryListResp{
-			Code: -1,
-			Msg:  err.Error(),
-			Data: nil,
-		}, err
-	}
-	illustrationMap := make(map[string]bird.IllustrationsResp)
-	for _, illustration := range *illustrationList {
-		illustrationMap[illustration.ID.Hex()] = bird.IllustrationsResp{
-			Id:          illustration.ID.Hex(),
-			RecordState: int32(illustration.RecordState),
-			CreateTime:  illustration.CreateAt.UnixMilli(),
-			Title:       illustration.Title,
-			Score:       illustration.Score,
-			WikiUrl:     illustration.WikiUrl,
-			ImagePath:   illustration.ImagePath,
-			IconPath:    illustration.IconPath,
-			MoreImages:  illustration.MoreImages,
-			Typee:       illustration.Type,
-			Labels:      illustration.Labels,
-			Description: illustration.Description,
-		}
 	}
 
 	resps := make([]*bird.GalleryRespData, 0)
 	for _, gallery := range *data {
-		resp := illustrationMap[gallery.IllustrationId]
+		var resp bird.IllustrationsResp
+		if len(gallery.Illustration) > 0 {
+			resp = bird.IllustrationsResp{
+				Id:          gallery.Illustration[0].ID.Hex(),
+				RecordState: int32(gallery.Illustration[0].RecordState),
+				CreateTime:  gallery.Illustration[0].CreateAt.UnixMilli(),
+				Title:       gallery.Illustration[0].Title,
+				Score:       gallery.Illustration[0].Score,
+				WikiUrl:     gallery.Illustration[0].WikiUrl,
+				ImagePath:   gallery.Illustration[0].ImagePath,
+				IconPath:    gallery.Illustration[0].IconPath,
+				MoreImages:  gallery.Illustration[0].MoreImages,
+				Typee:       gallery.Illustration[0].Type,
+				Labels:      gallery.Illustration[0].Labels,
+				Description: gallery.Illustration[0].Description,
+				ClassesId:   gallery.Illustration[0].ClassesId,
+				ChineseName: gallery.Illustration[0].ChineseName,
+				EnglishName: gallery.Illustration[0].EnglishName,
+			}
+		}
 		resps = append(resps, &bird.GalleryRespData{
 			Id:           gallery.ID.Hex(),
 			RecordState:  int32(gallery.RecordState),
