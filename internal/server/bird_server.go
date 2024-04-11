@@ -40,6 +40,11 @@ func (s *BirdServer) GalleryList(ctx context.Context, in *bird.GalleryListReq) (
 	return l.GalleryList(in)
 }
 
+func (s *BirdServer) GalleryCount(ctx context.Context, in *bird.NullReq) (*bird.GalleryCount, error) {
+	l := gallery.NewGalleryCountLogic(ctx, s.svcCtx)
+	return l.GalleryCount(in)
+}
+
 func (s *BirdServer) IllustrationCreate(ctx context.Context, in *bird.IllustrationsCreateReq) (*bird.IllustrationsResp, error) {
 	l := illustration.NewIllustrationCreateLogic(ctx, s.svcCtx)
 	return l.IllustrationCreate(in)

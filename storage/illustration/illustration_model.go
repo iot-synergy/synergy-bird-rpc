@@ -22,6 +22,7 @@ type (
 		FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error)
 		FindPageJoinGallery(ctx context.Context, labels []string, foreinId, typee, keyword string, isUnlock *bool,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
+		StatisticLock(ctx context.Context, userId string) (int32, int32, error)
 	}
 
 	customIllustrationModel struct {
@@ -241,4 +242,40 @@ func (m *customIllustrationModel) FindPageJoinGallery(ctx context.Context, label
 		count += do.Count
 	}
 	return &data, count, err
+}
+
+func (m *customIllustrationModel) StatisticLock(ctx context.Context, userId string) (unlock int32, lock int32, err error) {
+	lockCountDO := make([]CountDO, 0)
+	lockFilter := bson.A{
+		bson.M{"$lookup": bson.M{"from": "gallery_count", "localField": "title", "foreignField": "name", "as": "galleryCount"}},
+		bson.M{"$match": bson.M{
+			"galleryCount.userId": bson.M{"$ne": userId},
+			"recordState":         2,
+		}},
+		bson.M{"$group": bson.M{"_id": "", "count": bson.M{"$sum": 1}}},
+	}
+	err = m.conn.Aggregate(ctx, &lockCountDO, lockFilter)
+	if err != nil {
+		return
+	}
+	for _, do := range lockCountDO {
+		lock += int32(do.Count)
+	}
+	unlockCountDO := make([]CountDO, 0)
+	unlockFilter := bson.A{
+		bson.M{"$lookup": bson.M{"from": "gallery_count", "localField": "title", "foreignField": "name", "as": "galleryCount"}},
+		bson.M{"$match": bson.M{
+			"galleryCount.userId": userId,
+			"recordState":         2,
+		}},
+		bson.M{"$group": bson.M{"_id": "", "count": bson.M{"$sum": 1}}},
+	}
+	err = m.conn.Aggregate(ctx, &unlockCountDO, unlockFilter)
+	if err != nil {
+		return
+	}
+	for _, do := range unlockCountDO {
+		unlock += int32(do.Count)
+	}
+	return
 }

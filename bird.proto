@@ -295,6 +295,18 @@ message ClassesData {
   string EnglishName = 5;
 }
 
+message GalleryCount{
+  int64 code = 1;
+  string msg = 2;
+  GalleryCountData data = 4;
+}
+
+message GalleryCountData{
+  int32 Unlock = 1;
+  int32 Lock = 2;
+  int32 Count = 3;
+}
+
 service bird {
   //  group: gallery
   rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
@@ -302,6 +314,8 @@ service bird {
   rpc galleryDelete(IdReq) returns (GalleryResp);
   //  group: gallery
   rpc galleryList(GalleryListReq) returns (GalleryListResp);
+  //  group: gallery
+  rpc galleryCount(NullReq) returns(GalleryCount);
   //  group: illustration
   rpc illustrationCreate(IllustrationsCreateReq) returns (IllustrationsResp);
   //  group: illustration
