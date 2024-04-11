@@ -38,7 +38,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		return nil, errors.New("没有对应记录")
 	}
 	illustration.UpdateAt = time.Now()
-	if in.GetClassesId() != 0 || in.GetClassesId() != illustration.ClassesId {
+	if in.GetClassesId() != 0 && in.GetClassesId() != illustration.ClassesId {
 		classes, err := l.svcCtx.ClassesModel.FindOneByClassesId(l.ctx, in.GetClassesId())
 		if err != nil {
 			logx.Error(err.Error())
