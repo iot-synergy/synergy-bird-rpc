@@ -61,7 +61,7 @@ func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId 
 	if labelIds != nil && len(*labelIds) > 0 {
 		filterDate["illustration.labels"] = bson.M{"$in": *labelIds}
 	}
-	filterDate["illustration.recordStat"] = 2
+	filterDate["illustration.recordState"] = 2
 	if illustrationId != "" {
 		filterDate["illustrationId"] = illustrationId
 	}
