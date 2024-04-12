@@ -57,6 +57,7 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 	}
 
 	var onlyTraceId, imageUrl string
+	var isCreate bool
 label:
 	for _, traceId := range in.TraceIds {
 		// 查询ai事件
@@ -87,6 +88,7 @@ label:
 			continue label
 		}
 		if gall != nil {
+			isCreate = true
 			continue label
 		}
 		names := strings.Split(aiEvent.GetName(), ",")
@@ -100,9 +102,16 @@ label:
 	}
 
 	if onlyTraceId == "" {
+		if isCreate {
+			return &bird.GalleryResp{
+				Code: -1,
+				Msg:  "事件已经创建过成就",
+				Data: nil,
+			}, nil
+		}
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "没有在事件中查询到<" + in.Name + ">,或者事件以创建过成就",
+			Msg:  "没有在事件中查询到<" + in.Name + ">",
 			Data: nil,
 		}, nil
 	}

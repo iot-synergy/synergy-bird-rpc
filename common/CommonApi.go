@@ -15,10 +15,10 @@ func ListContainApi[T constraints.Ordered](list *[]T, entity T) bool {
 }
 
 func GetMapKey[K constraints.Ordered, V any](data *map[K]V) *[]K {
-	if data == nil || len(*data) == 0 {
-		return nil
-	}
 	resp := make([]K, 0)
+	if data == nil || len(*data) == 0 {
+		return &resp
+	}
 	for key, _ := range *data {
 		resp = append(resp, key)
 	}
@@ -26,10 +26,10 @@ func GetMapKey[K constraints.Ordered, V any](data *map[K]V) *[]K {
 }
 
 func GetMapValue[K constraints.Ordered, V any](data *map[K]V) *[]V {
-	if data == nil || len(*data) == 0 {
-		return nil
-	}
 	resp := make([]V, 0)
+	if data == nil || len(*data) == 0 {
+		return &resp
+	}
 	for _, value := range *data {
 		resp = append(resp, value)
 	}
@@ -37,10 +37,10 @@ func GetMapValue[K constraints.Ordered, V any](data *map[K]V) *[]V {
 }
 
 func GetMapValueDistinct[K constraints.Ordered, V constraints.Ordered](data *map[K]V) *[]V {
-	if data == nil || len(*data) == 0 {
-		return nil
-	}
 	resp := make([]V, 0)
+	if data == nil || len(*data) == 0 {
+		return &resp
+	}
 	m := make(map[V]string, 0)
 	for _, value := range *data {
 		m[value] = ""
@@ -52,11 +52,11 @@ func GetMapValueDistinct[K constraints.Ordered, V constraints.Ordered](data *map
 }
 
 func ListDistinct[T constraints.Ordered](data *[]T) *[]T {
+	resp := make([]T, 0)
 	if data == nil || len(*data) == 0 {
-		return nil
+		return &resp
 	}
 	m := make(map[T]string)
-	resp := make([]T, 0)
 	for _, t := range *data {
 		m[t] = ""
 	}

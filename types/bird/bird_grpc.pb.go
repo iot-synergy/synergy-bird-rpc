@@ -22,6 +22,7 @@ const (
 	Bird_GalleryCreate_FullMethodName          = "/bird.bird/galleryCreate"
 	Bird_GalleryDelete_FullMethodName          = "/bird.bird/galleryDelete"
 	Bird_GalleryList_FullMethodName            = "/bird.bird/galleryList"
+	Bird_GalleryPage_FullMethodName            = "/bird.bird/galleryPage"
 	Bird_GalleryCount_FullMethodName           = "/bird.bird/galleryCount"
 	Bird_IllustrationCreate_FullMethodName     = "/bird.bird/illustrationCreate"
 	Bird_IllustrationUpdate_FullMethodName     = "/bird.bird/illustrationUpdate"
@@ -52,6 +53,8 @@ type BirdClient interface {
 	GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*GalleryResp, error)
 	// group: gallery
 	GalleryList(ctx context.Context, in *GalleryListReq, opts ...grpc.CallOption) (*GalleryListResp, error)
+	// group: gallery
+	GalleryPage(ctx context.Context, in *GalleryPageReq, opts ...grpc.CallOption) (*GalleryListResp, error)
 	// group: gallery
 	GalleryCount(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*GalleryCount, error)
 	// group: illustration
@@ -119,6 +122,15 @@ func (c *birdClient) GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc.
 func (c *birdClient) GalleryList(ctx context.Context, in *GalleryListReq, opts ...grpc.CallOption) (*GalleryListResp, error) {
 	out := new(GalleryListResp)
 	err := c.cc.Invoke(ctx, Bird_GalleryList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *birdClient) GalleryPage(ctx context.Context, in *GalleryPageReq, opts ...grpc.CallOption) (*GalleryListResp, error) {
+	out := new(GalleryListResp)
+	err := c.cc.Invoke(ctx, Bird_GalleryPage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -298,6 +310,8 @@ type BirdServer interface {
 	// group: gallery
 	GalleryList(context.Context, *GalleryListReq) (*GalleryListResp, error)
 	// group: gallery
+	GalleryPage(context.Context, *GalleryPageReq) (*GalleryListResp, error)
+	// group: gallery
 	GalleryCount(context.Context, *NullReq) (*GalleryCount, error)
 	// group: illustration
 	IllustrationCreate(context.Context, *IllustrationsCreateReq) (*IllustrationsResp, error)
@@ -348,6 +362,9 @@ func (UnimplementedBirdServer) GalleryDelete(context.Context, *IdReq) (*GalleryR
 }
 func (UnimplementedBirdServer) GalleryList(context.Context, *GalleryListReq) (*GalleryListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GalleryList not implemented")
+}
+func (UnimplementedBirdServer) GalleryPage(context.Context, *GalleryPageReq) (*GalleryListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GalleryPage not implemented")
 }
 func (UnimplementedBirdServer) GalleryCount(context.Context, *NullReq) (*GalleryCount, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GalleryCount not implemented")
@@ -466,6 +483,24 @@ func _Bird_GalleryList_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BirdServer).GalleryList(ctx, req.(*GalleryListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bird_GalleryPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GalleryPageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BirdServer).GalleryPage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bird_GalleryPage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BirdServer).GalleryPage(ctx, req.(*GalleryPageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -812,6 +847,10 @@ var Bird_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "galleryList",
 			Handler:    _Bird_GalleryList_Handler,
+		},
+		{
+			MethodName: "galleryPage",
+			Handler:    _Bird_GalleryPage_Handler,
 		},
 		{
 			MethodName: "galleryCount",

@@ -23,6 +23,7 @@ type (
 	GalleryListReq          = bird.GalleryListReq
 	GalleryListResp         = bird.GalleryListResp
 	GalleryListRespData     = bird.GalleryListRespData
+	GalleryPageReq          = bird.GalleryPageReq
 	GalleryResp             = bird.GalleryResp
 	GalleryRespData         = bird.GalleryRespData
 	GalleryUpdateReq        = bird.GalleryUpdateReq
@@ -50,6 +51,7 @@ type (
 		GalleryCreate(ctx context.Context, in *GalleryCreateReq, opts ...grpc.CallOption) (*GalleryResp, error)
 		GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*GalleryResp, error)
 		GalleryList(ctx context.Context, in *GalleryListReq, opts ...grpc.CallOption) (*GalleryListResp, error)
+		GalleryPage(ctx context.Context, in *GalleryPageReq, opts ...grpc.CallOption) (*GalleryListResp, error)
 		GalleryCount(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*GalleryCount, error)
 		IllustrationCreate(ctx context.Context, in *IllustrationsCreateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
 		IllustrationUpdate(ctx context.Context, in *IllustrationsUpdateReq, opts ...grpc.CallOption) (*IllustrationsResp, error)
@@ -94,6 +96,11 @@ func (m *defaultBird) GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc
 func (m *defaultBird) GalleryList(ctx context.Context, in *GalleryListReq, opts ...grpc.CallOption) (*GalleryListResp, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.GalleryList(ctx, in, opts...)
+}
+
+func (m *defaultBird) GalleryPage(ctx context.Context, in *GalleryPageReq, opts ...grpc.CallOption) (*GalleryListResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.GalleryPage(ctx, in, opts...)
 }
 
 func (m *defaultBird) GalleryCount(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*GalleryCount, error) {

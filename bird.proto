@@ -41,6 +41,17 @@ message GalleryListReq {
   repeated string labelIds = 7;
 }
 
+message GalleryPageReq {
+  optional string illustrationId = 1;
+  optional string name = 2;
+  optional int64 startTime = 3;
+  optional int64 endTime = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+  repeated string labelIds = 7;
+  string userId = 8;
+}
+
 message GalleryResp {
   int64 code = 1;
   string msg = 2;
@@ -315,6 +326,8 @@ service bird {
   rpc galleryDelete(IdReq) returns (GalleryResp);
   //  group: gallery
   rpc galleryList(GalleryListReq) returns (GalleryListResp);
+  //  group: gallery
+  rpc galleryPage(GalleryPageReq) returns (GalleryListResp);
   //  group: gallery
   rpc galleryCount(NullReq) returns(GalleryCount);
   //  group: illustration
