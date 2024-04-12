@@ -55,15 +55,13 @@ func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId 
 	startTime, endTime int64, page, pageSize uint64, labelIds *[]string) (*[]GalleryJoinIllustrationDO, int64, error) {
 	data := make([]GalleryJoinIllustrationDO, 0)
 	var lookup bson.M
-	if labelIds != nil && len(*labelIds) > 0 {
-		lookup = bson.M{"from": "illustration", "localField": "name", "foreignField": "title", "as": "illustration",
-			"pipeline": bson.A{bson.M{"$match": bson.M{"labels": bson.M{"$in": *labelIds}, "recordState": 2}}}}
-	} else {
-		lookup = bson.M{"from": "illustration", "localField": "name", "foreignField": "title", "as": "illustration",
-			"pipeline": bson.A{bson.M{"$match": bson.M{"recordState": 2}}}}
-	}
+	lookup = bson.M{"from": "illustration", "localField": "name", "foreignField": "title", "as": "illustration"}
 	filterDate := make(map[string]interface{}) //查询条件data
 	filterDate["userId"] = userId
+	if labelIds != nil && len(*labelIds) > 0 {
+		filterDate["illustration.labels"] = bson.M{"$in": *labelIds}
+	}
+	filterDate["illustration.recordStat"] = 2
 	if illustrationId != "" {
 		filterDate["illustrationId"] = illustrationId
 	}
