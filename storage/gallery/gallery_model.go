@@ -75,7 +75,6 @@ func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId 
 		filterDate["updateAt"] = bson.M{"$lt": time.UnixMilli(endTime)}
 	}
 	filterDate["recordState"] = 2
-	filterDate["illustration"] = bson.M{"$gt": make([]string, 0)}
 	marshal, err := bson.Marshal(filterDate)
 	if err != nil {
 		logx.Error(err.Error())
