@@ -93,7 +93,7 @@ label:
 		}
 		names := strings.Split(aiEvent.GetName(), ",")
 		for _, name := range names {
-			if name == in.Name {
+			if name == illustration.EnglishName {
 				imageUrl = aiEvent.CoverImageUrl
 				onlyTraceId = traceId
 				break label
