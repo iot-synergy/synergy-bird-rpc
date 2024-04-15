@@ -19,6 +19,7 @@ type (
 		FindListByParamAndPage(ctx context.Context, labels []string, typee, keyword string,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 		FindOneByTitle(ctx context.Context, title string) (*Illustration, error)
+		FindOneByEnglishName(ctx context.Context, englishName string) (*Illustration, error)
 		FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error)
 		FindPageJoinGallery(ctx context.Context, labels []string, foreinId, typee, keyword string, isUnlock *bool,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
@@ -101,7 +102,20 @@ func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, la
 
 func (m *customIllustrationModel) FindOneByTitle(ctx context.Context, title string) (*Illustration, error) {
 	var data Illustration
-	err := m.conn.FindOne(ctx, &data, bson.M{"title": title})
+	err := m.conn.FindOne(ctx, &data, bson.M{"title": title, "recordState": 2})
+	switch err {
+	case nil:
+		return &data, nil
+	case mon.ErrNotFound:
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *customIllustrationModel) FindOneByEnglishName(ctx context.Context, englishName string) (*Illustration, error) {
+	var data Illustration
+	err := m.conn.FindOne(ctx, &data, bson.M{"englishName": englishName, "recordState": 2})
 	switch err {
 	case nil:
 		return &data, nil

@@ -43,7 +43,7 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 	forein_id := strings.Join(value, "")
 
 	// 根据鸟的名字查询图鉴
-	illustration, err := l.svcCtx.IllustrationModel.FindOneByTitle(l.ctx, in.Name)
+	illustration, err := l.svcCtx.IllustrationModel.FindOneByEnglishName(l.ctx, in.Name)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, err
