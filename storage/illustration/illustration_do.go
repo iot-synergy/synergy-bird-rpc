@@ -31,3 +31,8 @@ type CountDO struct {
 	ID    string `bson:"_id,omitempty" json:"_id,omitempty"`
 	Count int64  `bson:"count,omitempty" json:"count,omitempty"`
 }
+
+type TitleDO struct {
+	ID    string `bson:"_id,omitempty" json:"_id,omitempty"`
+	Title string `bson:"title,omitempty" json:"title,omitempty"`
+}

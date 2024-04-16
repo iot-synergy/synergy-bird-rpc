@@ -51,6 +51,12 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 		}
 		if data != nil && data.Title != "" && data.RecordState != 4 {
 			return nil, errors.New("图鉴已创建过了")
+		} else if data != nil && data.Title != "" && illustration.RecordState == 4 {
+			_, err = l.svcCtx.IllustrationModel.Delete(l.ctx, illustration.ID.Hex())
+			if err != nil {
+				logx.Error(err.Error())
+				return nil, err
+			}
 		}
 		illustration.Title = classes.ClassesName
 		illustration.ClassesId = classes.ClassesId

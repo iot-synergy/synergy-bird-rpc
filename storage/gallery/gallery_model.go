@@ -2,10 +2,10 @@ package model
 
 import (
 	"context"
-	model "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -18,7 +18,7 @@ type (
 		galleryModel
 		FindOneByNameAndUserId(ctx context.Context, name, userId string) (*Gallery, error)
 		FindListByParamAndPage(ctx context.Context, userId, illustrationId, name string, startTime, endTime int64,
-			page, pageSize uint64, labelIds *[]string) (*[]GalleryJoinIllustrationDO, int64, error)
+			page, pageSize uint64, titles *[]string) (*[]Gallery, int64, error)
 		FindOneByTraceId(ctx context.Context, traceId string) (*Gallery, error)
 		CountByUserIdAndIllustrationId(ctx context.Context, userId, illustrationId string) (int64, error)
 	}
@@ -52,16 +52,13 @@ func (m *customGalleryModel) FindOneByNameAndUserId(ctx context.Context, name, u
 }
 
 func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId string, illustrationId, name string,
-	startTime, endTime int64, page, pageSize uint64, labelIds *[]string) (*[]GalleryJoinIllustrationDO, int64, error) {
-	data := make([]GalleryJoinIllustrationDO, 0)
-	var lookup bson.M
-	lookup = bson.M{"from": "illustration", "localField": "name", "foreignField": "title", "as": "illustration"}
+	startTime, endTime int64, page, pageSize uint64, titles *[]string) (*[]Gallery, int64, error) {
+	data := make([]Gallery, 0)
 	filterDate := make(map[string]interface{}) //查询条件data
 	filterDate["userId"] = userId
-	if labelIds != nil && len(*labelIds) > 0 {
-		filterDate["illustration.labels"] = bson.M{"$in": *labelIds}
+	if titles != nil && len(*titles) > 0 {
+		filterDate["name"] = bson.M{"$in": *titles}
 	}
-	filterDate["illustration.recordState"] = 2
 	if illustrationId != "" {
 		filterDate["illustrationId"] = illustrationId
 	}
@@ -80,27 +77,26 @@ func (m *customGalleryModel) FindListByParamAndPage(ctx context.Context, userId 
 		logx.Error(err.Error())
 		return nil, 0, err
 	}
-	match := bson.M{} //查询条件
-	err = bson.Unmarshal(marshal, match)
+	filter := bson.M{} //查询条件
+	err = bson.Unmarshal(marshal, filter)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, 0, err
 	}
 
-	filter := bson.A{bson.M{"$lookup": lookup}, bson.M{"$match": match}, bson.M{"$limit": pageSize}, bson.M{"$skip": (page - 1) * pageSize}}
-	countFilter := bson.A{bson.M{"$lookup": lookup}, bson.M{"$match": match}, bson.M{"$group": bson.M{"_id": "", "count": bson.M{"$sum": 1}}}}
-	err = m.conn.Aggregate(ctx, &data, filter)
+	count, err := m.conn.CountDocuments(ctx, filter)
 	if err != nil {
+		logx.Error(err.Error())
 		return nil, 0, err
 	}
-	countDO := make([]model.CountDO, 0)
-	err = m.conn.Aggregate(ctx, &countDO, countFilter)
+	findoptions := new(options.FindOptions)
+	findoptions.SetLimit(int64(pageSize))
+	findoptions.SetSkip(int64(page-1) * int64(pageSize))
+	findoptions.SetSort(bson.D{bson.E{"updateAt", -1}})
+	err = m.conn.Find(ctx, &data, filter, findoptions)
 	if err != nil {
+		logx.Error(err.Error())
 		return nil, 0, err
-	}
-	var count int64
-	for _, do := range countDO {
-		count += do.Count
 	}
 	return &data, count, nil
 }

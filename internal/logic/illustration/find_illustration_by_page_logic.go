@@ -26,7 +26,7 @@ func NewFindIllustrationByPageLogic(ctx context.Context, svcCtx *svc.ServiceCont
 	}
 }
 
-func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsPageReq) (*bird.IllustrationsListVo, error) {
+func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.IllustrationsPageReq) (resp *bird.IllustrationsListVo, err error) {
 	// 获取用户id
 	value := metadata.ValueFromIncomingContext(l.ctx, "gateway-firebaseid")
 	if len(value) <= 0 {
@@ -37,9 +37,20 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 		}, nil
 	}
 	forein_id := strings.Join(value, "")
-	data, count, err :=
-		l.svcCtx.IllustrationModel.FindPageJoinGallery(l.ctx, in.Labels, forein_id, in.GetTypee(), in.GetKeyword(), in.IsUnlock, 2, in.Page, in.PageSize)
-	//data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, in.Labels, in.GetTypee(), in.GetKeyword(), 2, in.Page, in.PageSize)
+	var titles *[]string
+	if in.IsUnlock != nil {
+		titles, err = l.svcCtx.GalleryCountModel.FindUnlockTitles(l.ctx, forein_id)
+		if err != nil {
+			return &bird.IllustrationsListVo{
+				Code:    -1,
+				Message: err.Error(),
+			}, err
+		}
+	}
+	//data, count, err :=
+	//	l.svcCtx.IllustrationModel.FindPageJoinGallery(l.ctx, in.Labels, forein_id, in.GetTypee(), in.GetKeyword(), in.IsUnlock, 2, in.Page, in.PageSize)
+	data, count, err := l.svcCtx.IllustrationModel.FindListByParamAndPage(l.ctx, &in.Labels, titles, in.GetTypee(),
+		in.GetKeyword(), in.IsUnlock, 2, in.Page, in.PageSize)
 	if err != nil {
 		return &bird.IllustrationsListVo{
 			Code:    -1,

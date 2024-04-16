@@ -16,6 +16,7 @@ type (
 		galleryCountModel
 		FindOneByUserIdAndIllustrationId(ctx context.Context, userId, illustrationId string) (*GalleryCount, error)
 		FindByIllustrationIdList(ctx context.Context, userId string, illustrationIds []string) (*[]GalleryCount, error)
+		FindUnlockTitles(ctx context.Context, userId string) (*[]string, error)
 	}
 
 	customGalleryCountModel struct {
@@ -61,4 +62,25 @@ func (m *customGalleryCountModel) FindByIllustrationIdList(ctx context.Context, 
 	err = bson.Unmarshal(marshal, filter)
 	m.conn.Find(ctx, &data, filter)
 	return &data, nil
+}
+
+func (m *customGalleryCountModel) FindUnlockTitles(ctx context.Context, userId string) (*[]string, error) {
+	data := make([]GalleryCount, 0)
+	filterDate := make(map[string]interface{}) //查询条件data
+	filterDate["recordState"] = 2
+	filterDate["count"] = bson.M{"$gt": 0}
+	filterDate["userId"] = userId
+	marshal, err := bson.Marshal(filterDate)
+	if err != nil {
+		logx.Error(err.Error())
+		return nil, err
+	}
+	filter := bson.M{} //查询条件
+	err = bson.Unmarshal(marshal, filter)
+	m.conn.Find(ctx, &data, filter)
+	result := make([]string, 0)
+	for _, count := range data {
+		result = append(result, count.Name)
+	}
+	return &result, nil
 }

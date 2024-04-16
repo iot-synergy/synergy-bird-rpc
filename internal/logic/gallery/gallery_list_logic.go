@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"context"
+	model "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
 	"google.golang.org/grpc/metadata"
 	"strings"
 
@@ -25,7 +26,7 @@ func NewGalleryListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Galle
 	}
 }
 
-func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryListResp, error) {
+func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (resp *bird.GalleryListResp, err error) {
 	// 获取用户id
 	value := metadata.ValueFromIncomingContext(l.ctx, "gateway-firebaseid")
 	if len(value) <= 0 {
@@ -36,8 +37,24 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryLi
 		}, nil
 	}
 	forein_id := strings.Join(value, "")
+	//根据标签列表获取图鉴Title列表
+	var titles *[]string
+	if in.GetLabelIds() != nil && len(in.GetLabelIds()) > 0 {
+		titles, err = l.svcCtx.IllustrationModel.FindTitleListByLabelIds(l.ctx, in.GetLabelIds())
+		if titles == nil || len(*titles) == 0 {
+			return &bird.GalleryListResp{
+				Code: 0,
+				Msg:  "成功",
+				Data: &bird.GalleryListRespData{
+					Data:  nil,
+					Total: 0,
+				},
+			}, nil
+		}
+	}
+	//根据Title列表查询成就
 	data, count, err := l.svcCtx.GalleryModel.FindListByParamAndPage(l.ctx, forein_id, in.GetIllustrationId(),
-		in.GetName(), in.GetStartTime(), in.GetEndTime(), in.Page, in.PageSize, &in.LabelIds)
+		in.GetName(), in.GetStartTime(), in.GetEndTime(), in.Page, in.PageSize, titles)
 	if err != nil {
 		return &bird.GalleryListResp{
 			Code: -1,
@@ -45,28 +62,43 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (*bird.GalleryLi
 			Data: nil,
 		}, err
 	}
+	titleList := make([]string, 0)
+	for _, gallery := range *data {
+		titleList = append(titleList, gallery.Name)
+	}
+	illustrationList, err := l.svcCtx.IllustrationModel.FindListByTitles(l.ctx, &titleList)
+	if err != nil {
+		return &bird.GalleryListResp{
+			Code: -1,
+			Msg:  err.Error(),
+			Data: nil,
+		}, err
+	}
+	illustrationMap := make(map[string]model.Illustration)
+	for _, illustration := range *illustrationList {
+		illustrationMap[illustration.Title] = illustration
+	}
 
 	resps := make([]*bird.GalleryRespData, 0)
 	for _, gallery := range *data {
 		var resp bird.IllustrationsResp
-		if len(gallery.Illustration) > 0 {
-			resp = bird.IllustrationsResp{
-				Id:          gallery.Illustration[0].ID.Hex(),
-				RecordState: int32(gallery.Illustration[0].RecordState),
-				CreateTime:  gallery.Illustration[0].CreateAt.UnixMilli(),
-				Title:       gallery.Illustration[0].Title,
-				Score:       gallery.Illustration[0].Score,
-				WikiUrl:     gallery.Illustration[0].WikiUrl,
-				ImagePath:   gallery.Illustration[0].ImagePath,
-				IconPath:    gallery.Illustration[0].IconPath,
-				MoreImages:  gallery.Illustration[0].MoreImages,
-				Typee:       gallery.Illustration[0].Type,
-				Labels:      gallery.Illustration[0].Labels,
-				Description: gallery.Illustration[0].Description,
-				ClassesId:   gallery.Illustration[0].ClassesId,
-				ChineseName: gallery.Illustration[0].ChineseName,
-				EnglishName: gallery.Illustration[0].EnglishName,
-			}
+		illustration := illustrationMap[gallery.Name]
+		resp = bird.IllustrationsResp{
+			Id:          illustration.ID.Hex(),
+			RecordState: int32(illustration.RecordState),
+			CreateTime:  illustration.CreateAt.UnixMilli(),
+			Title:       illustration.Title,
+			Score:       illustration.Score,
+			WikiUrl:     illustration.WikiUrl,
+			ImagePath:   illustration.ImagePath,
+			IconPath:    illustration.IconPath,
+			MoreImages:  illustration.MoreImages,
+			Typee:       illustration.Type,
+			Labels:      illustration.Labels,
+			Description: illustration.Description,
+			ClassesId:   illustration.ClassesId,
+			ChineseName: illustration.ChineseName,
+			EnglishName: illustration.EnglishName,
 		}
 		resps = append(resps, &bird.GalleryRespData{
 			Id:           gallery.ID.Hex(),

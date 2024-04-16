@@ -39,6 +39,12 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 	}
 	if illustration != nil && illustration.RecordState != 4 {
 		return nil, errors.New("图鉴已创建过了")
+	} else if illustration != nil && illustration.RecordState == 4 {
+		_, err = l.svcCtx.IllustrationModel.Delete(l.ctx, illustration.ID.Hex())
+		if err != nil {
+			logx.Error(err.Error())
+			return nil, err
+		}
 	}
 
 	illustration = &model.Illustration{

@@ -5,7 +5,6 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -16,14 +15,15 @@ type (
 	// and implement the added methods in customIllustrationModel.
 	IllustrationModel interface {
 		illustrationModel
-		FindListByParamAndPage(ctx context.Context, labels []string, typee, keyword string,
+		FindListByParamAndPage(ctx context.Context, labels, titles *[]string, typee, keyword string, isUnlock *bool,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 		FindOneByTitle(ctx context.Context, title string) (*Illustration, error)
 		FindOneByEnglishName(ctx context.Context, englishName string) (*Illustration, error)
-		FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error)
+		FindListByTitles(ctx context.Context, titles *[]string) (*[]Illustration, error)
 		FindPageJoinGallery(ctx context.Context, labels []string, foreinId, typee, keyword string, isUnlock *bool,
 			state int32, page, pageSize uint64) (*[]Illustration, int64, error)
 		StatisticLock(ctx context.Context, userId string) (int32, int32, error)
+		FindTitleListByLabelIds(ctx context.Context, labelIds []string) (*[]string, error)
 	}
 
 	customIllustrationModel struct {
@@ -39,8 +39,8 @@ func NewIllustrationModel(url, db, collection string) IllustrationModel {
 	}
 }
 
-func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, labels []string,
-	typee, keyword string, state int32, page, pageSize uint64) (*[]Illustration, int64, error) {
+func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, labels, titles *[]string,
+	typee, keyword string, isUnlock *bool, state int32, page, pageSize uint64) (*[]Illustration, int64, error) {
 	data := make([]Illustration, 0)
 
 	filterDate := make(map[string]interface{}) //查询条件data
@@ -61,10 +61,16 @@ func (m *customIllustrationModel) FindListByParamAndPage(ctx context.Context, la
 		//	bson.M{"description": bson.M{"regex": primitive.Regex{Pattern: ".*" + keyword + ".*", Options: "i"}}},
 		//}
 	}
-	if labels != nil && len(labels) > 0 {
-		filterLabels := make(map[string][]string)
-		filterLabels["$in"] = labels
-		filterDate["labels"] = filterLabels
+	if isUnlock != nil {
+		if *isUnlock {
+			filterDate["title"] = bson.M{"$in": *titles}
+		} else {
+			filterDate["title"] = bson.M{"$nin": *titles}
+		}
+	}
+
+	if labels != nil && len(*labels) > 0 {
+		filterDate["labels"] = bson.M{"$in": *labels}
 	}
 	if typee != "" {
 		filterDate["type"] = typee
@@ -126,16 +132,9 @@ func (m *customIllustrationModel) FindOneByEnglishName(ctx context.Context, engl
 	}
 }
 
-func (m *customIllustrationModel) FindListByIds(ctx context.Context, ids *[]string) (*[]Illustration, error) {
-	oids := make([]primitive.ObjectID, 0)
-	for _, id := range *ids {
-		oid, err := primitive.ObjectIDFromHex(id)
-		if err == nil {
-			oids = append(oids, oid)
-		}
-	}
+func (m *customIllustrationModel) FindListByTitles(ctx context.Context, titles *[]string) (*[]Illustration, error) {
 	data := make([]Illustration, 0)
-	err := m.conn.Find(ctx, &data, bson.M{"_id": bson.M{"$in": oids}})
+	err := m.conn.Find(ctx, &data, bson.M{"title": bson.M{"$in": *titles}})
 	if err != nil {
 		return nil, err
 	}
@@ -292,4 +291,20 @@ func (m *customIllustrationModel) StatisticLock(ctx context.Context, userId stri
 		unlock += int32(do.Count)
 	}
 	return
+}
+
+func (m *customIllustrationModel) FindTitleListByLabelIds(ctx context.Context, labelIds []string) (*[]string, error) {
+	data := make([]TitleDO, 0)
+	err := m.conn.Aggregate(ctx, &data, bson.A{
+		bson.M{"$match": bson.M{"labels": bson.M{"$in": labelIds}, "recordState": 2}},
+		bson.M{"$project": bson.M{"title": 1}},
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]string, 0)
+	for _, do := range data {
+		result = append(result, do.Title)
+	}
+	return &result, nil
 }
