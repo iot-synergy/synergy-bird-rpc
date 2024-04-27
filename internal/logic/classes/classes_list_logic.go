@@ -46,7 +46,7 @@ func (l *ClassesListLogic) ClassesList(in *bird.ClassesListReq) (*bird.ClassesLi
 	}
 	return &bird.ClassesListResp{
 		Code:  0,
-		Msg:   "成功",
+		Msg:   "successful",
 		Total: count,
 		Data:  classesData,
 	}, nil

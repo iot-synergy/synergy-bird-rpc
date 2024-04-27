@@ -32,7 +32,7 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (resp *bird.Gall
 	if len(value) <= 0 {
 		return &bird.GalleryListResp{
 			Code: -1,
-			Msg:  "用户未登录",
+			Msg:  "User not logged in",
 			Data: nil,
 		}, nil
 	}
@@ -44,7 +44,7 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (resp *bird.Gall
 		if titles == nil || len(*titles) == 0 {
 			return &bird.GalleryListResp{
 				Code: 0,
-				Msg:  "成功",
+				Msg:  "successful",
 				Data: &bird.GalleryListRespData{
 					Data:  nil,
 					Total: 0,
@@ -112,7 +112,7 @@ func (l *GalleryListLogic) GalleryList(in *bird.GalleryListReq) (resp *bird.Gall
 
 	return &bird.GalleryListResp{
 		Code: 0,
-		Msg:  "成功",
+		Msg:  "successful",
 		Data: &bird.GalleryListRespData{
 			Data:  resps,
 			Total: count,

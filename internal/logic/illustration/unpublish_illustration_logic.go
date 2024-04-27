@@ -29,15 +29,15 @@ func (l *UnpublishIllustrationLogic) UnpublishIllustration(in *bird.IdReq) (*bir
 	illustration, err := l.svcCtx.IllustrationModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("没有对应记录")
+			return nil, errors.New("No record")
 		}
 		return nil, err
 	}
 	if illustration == nil {
-		return nil, errors.New("没有对应记录")
+		return nil, errors.New("No record")
 	}
 	if illustration.RecordState != 2 {
-		return nil, errors.New("未发布")
+		return nil, errors.New("unpublish")
 	}
 	illustration.RecordState = 3
 	_, err = l.svcCtx.IllustrationModel.Update(l.ctx, illustration)

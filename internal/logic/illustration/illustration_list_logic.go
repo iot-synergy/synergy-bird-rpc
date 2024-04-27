@@ -93,6 +93,6 @@ func (l *IllustrationListLogic) IllustrationList(in *bird.IllustrationsListReq) 
 		Results: resps,
 		Total:   count,
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 	}, nil
 }

@@ -30,12 +30,12 @@ func (l *LabelUpdateLogic) LabelUpdate(in *bird.LabelUpdateReq) (*bird.LabelResp
 	label, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("记录不存在")
+			return nil, errors.New("Record does not exist")
 		}
 		return nil, err
 	}
 	if label == nil {
-		return nil, errors.New("记录不存在")
+		return nil, errors.New("Record does not exist")
 	}
 	if in.GetRecordState() != 0 {
 		label.RecordState = int8(in.GetRecordState())

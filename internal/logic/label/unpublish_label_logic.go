@@ -29,15 +29,15 @@ func (l *UnpublishLabelLogic) UnpublishLabel(in *bird.IdReq) (*bird.LabelResp, e
 	label, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("没有对应记录")
+			return nil, errors.New("No record")
 		}
 		return nil, err
 	}
 	if label == nil {
-		return nil, errors.New("没有对应记录")
+		return nil, errors.New("No record")
 	}
 	if label.RecordState != 2 {
-		return nil, errors.New("未发布")
+		return nil, errors.New("unpublish")
 	}
 	label.RecordState = 3
 	_, err = l.svcCtx.LabelModel.Update(l.ctx, label)

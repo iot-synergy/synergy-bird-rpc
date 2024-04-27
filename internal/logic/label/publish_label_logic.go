@@ -29,15 +29,15 @@ func (l *PublishLabelLogic) PublishLabel(in *bird.IdReq) (*bird.LabelResp, error
 	label, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("没有对应记录")
+			return nil, errors.New("No record")
 		}
 		return nil, err
 	}
 	if label == nil {
-		return nil, errors.New("没有对应记录")
+		return nil, errors.New("No record")
 	}
 	if label.RecordState == 2 {
-		return nil, errors.New("已发布")
+		return nil, errors.New("Have released")
 	}
 	label.RecordState = 2
 	_, err = l.svcCtx.LabelModel.Update(l.ctx, label)

@@ -31,7 +31,7 @@ func (l *GalleryCountLogic) GalleryCount(in *bird.NullReq) (*bird.GalleryCount, 
 	if len(value) <= 0 {
 		return &bird.GalleryCount{
 			Code: -1,
-			Msg:  "用户未登录",
+			Msg:  "User not logged in",
 			Data: nil,
 		}, nil
 	}
@@ -46,7 +46,7 @@ func (l *GalleryCountLogic) GalleryCount(in *bird.NullReq) (*bird.GalleryCount, 
 	}
 	return &bird.GalleryCount{
 		Code: 0,
-		Msg:  "成功",
+		Msg:  "successful",
 		Data: &bird.GalleryCountData{
 			Unlock: unlock,
 			Lock:   lock,

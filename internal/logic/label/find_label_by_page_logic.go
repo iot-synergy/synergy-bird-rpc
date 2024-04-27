@@ -28,7 +28,7 @@ func (l *FindLabelByPageLogic) FindLabelByPage(in *bird.LabelListReq) (*bird.Lab
 	if err != nil {
 		return &bird.LabelListVo{
 			Code:    -1,
-			Message: "读取失败",
+			Message: "Read failure",
 			Data:    nil,
 		}, err
 	}
@@ -45,7 +45,7 @@ func (l *FindLabelByPageLogic) FindLabelByPage(in *bird.LabelListReq) (*bird.Lab
 	}
 	return &bird.LabelListVo{
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 		Data: &bird.LabelListVoData{
 			Total: count,
 			Data:  resps,

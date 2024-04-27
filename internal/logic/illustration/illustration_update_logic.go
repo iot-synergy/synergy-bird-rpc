@@ -30,12 +30,12 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 	illustration, err := l.svcCtx.IllustrationModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("没有对应记录")
+			return nil, errors.New("No record")
 		}
 		return nil, err
 	}
 	if illustration == nil {
-		return nil, errors.New("没有对应记录")
+		return nil, errors.New("No record")
 	}
 	illustration.UpdateAt = time.Now()
 	if in.GetClassesId() != 0 && in.GetClassesId() != illustration.ClassesId {
@@ -50,7 +50,7 @@ func (l *IllustrationUpdateLogic) IllustrationUpdate(in *bird.IllustrationsUpdat
 			return nil, err
 		}
 		if data != nil && data.Title != "" && data.RecordState != 4 {
-			return nil, errors.New("图鉴已创建过了")
+			return nil, errors.New("The map has already been created")
 		} else if data != nil && data.Title != "" && illustration.RecordState == 4 {
 			_, err = l.svcCtx.IllustrationModel.Delete(l.ctx, illustration.ID.Hex())
 			if err != nil {

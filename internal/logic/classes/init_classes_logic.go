@@ -125,7 +125,7 @@ func (l *InitClassesLogic) InitClasses(in *bird.NullReq) (*bird.BooleanResp, err
 	l.svcCtx.ClassesModel.BatchInsert(l.ctx, &classesList)
 	return &bird.BooleanResp{
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 		Data:    true,
 	}, nil
 }

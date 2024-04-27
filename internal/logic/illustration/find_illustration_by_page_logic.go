@@ -32,7 +32,7 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 	if len(value) <= 0 {
 		return &bird.IllustrationsListVo{
 			Code:    -1,
-			Message: "用户未登录",
+			Message: "User not logged in",
 			Data:    nil,
 		}, nil
 	}
@@ -135,7 +135,7 @@ func (l *FindIllustrationByPageLogic) FindIllustrationByPage(in *bird.Illustrati
 	}
 	return &bird.IllustrationsListVo{
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 		Data: &bird.IllustrationsListVoData{
 			Total: count,
 			Data:  resps,

@@ -43,6 +43,6 @@ func (l *LabelListLogic) LabelList(in *bird.LabelListReq) (*bird.LabelListResp, 
 		Results: resps,
 		Total:   count,
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 	}, nil
 }

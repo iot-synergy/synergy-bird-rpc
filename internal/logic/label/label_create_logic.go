@@ -35,10 +35,10 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 			return nil, err
 		}
 		if errors.Is(err, mon.ErrNotFound) || parent == nil {
-			return nil, errors.New("父节点id不存在")
+			return nil, errors.New("The parent node id does not exist")
 		}
 		if parent.RecordState != 2 {
-			return nil, errors.New("父节点不是健康的")
+			return nil, errors.New("The parent node is not healthy")
 		}
 	} else if in.ParentId == "" {
 		in.ParentId = "0"
@@ -49,7 +49,7 @@ func (l *LabelCreateLogic) LabelCreate(in *bird.LabelCreateReq) (*bird.LabelResp
 		return nil, err
 	}
 	if label != nil {
-		return nil, errors.New("存在相同记录")
+		return nil, errors.New("Presence of identical records")
 	}
 	data := model.Label{
 		UpdateAt:    time.Now(),

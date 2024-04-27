@@ -36,7 +36,7 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 	if len(value) <= 0 {
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "用户未登录",
+			Msg:  "User not logged in",
 			Data: nil,
 		}, nil
 	}
@@ -51,7 +51,7 @@ func (l *GalleryCreateLogic) GalleryCreate(in *bird.GalleryCreateReq) (*bird.Gal
 	if illustration == nil {
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "ai事件当中关联鸟类信息没有保存到图鉴里",
+			Msg:  "The associated bird information in the ai event is not saved in the illustration",
 			Data: nil,
 		}, nil
 	}
@@ -69,7 +69,7 @@ label:
 		if aiEvent == nil {
 			return &bird.GalleryResp{
 				Code: -1,
-				Msg:  "没有查询到关联的ai事件:" + traceId,
+				Msg:  "No associated ai event was queried:" + traceId,
 				Data: nil,
 			}, nil
 		}
@@ -77,7 +77,7 @@ label:
 		if forein_id != regexp.MustCompile("^peckperk-").ReplaceAllLiteralString(aiEvent.GetOwnerId(), "") {
 			return &bird.GalleryResp{
 				Code: -1,
-				Msg:  "ai事件不属于当前用户:" + traceId,
+				Msg:  "ai events do not belong to the current user:" + traceId,
 				Data: nil,
 			}, nil
 		}
@@ -105,13 +105,13 @@ label:
 		if isCreate {
 			return &bird.GalleryResp{
 				Code: -1,
-				Msg:  "事件已经创建过成就",
+				Msg:  "Events have created gallery",
 				Data: nil,
 			}, nil
 		}
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "没有在事件中查询到<" + in.Name + ">",
+			Msg:  "Not found in event<" + in.Name + ">",
 			Data: nil,
 		}, nil
 	}

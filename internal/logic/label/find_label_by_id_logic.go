@@ -31,26 +31,26 @@ func (l *FindLabelByIdLogic) FindLabelById(in *bird.IdReq) (*bird.LabelVo, error
 		if err != nil {
 			return &bird.LabelVo{
 				Code:    -2,
-				Message: "数据为空",
+				Message: "Data null",
 			}, nil
 		}
 	}
 	if err != nil {
 		return &bird.LabelVo{
 			Code:    -1,
-			Message: "失败",
+			Message: "fail",
 		}, err
 	}
 	if data.RecordState != 2 {
 		return &bird.LabelVo{
 			Code:    -1,
-			Message: "失败",
+			Message: "fail",
 		}, err
 	}
 
 	return &bird.LabelVo{
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 		Data: &bird.LabelResp{
 			Id:          data.ID.Hex(),
 			RecordState: int32(data.RecordState),

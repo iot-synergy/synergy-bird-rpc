@@ -34,7 +34,7 @@ func (l *GalleryDeleteLogic) GalleryDelete(in *bird.IdReq) (*bird.GalleryResp, e
 	if len(value) <= 0 {
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "用户未登录",
+			Msg:  "User not logged in",
 			Data: nil,
 		}, nil
 	}
@@ -45,7 +45,7 @@ func (l *GalleryDeleteLogic) GalleryDelete(in *bird.IdReq) (*bird.GalleryResp, e
 		if errors.Is(err, mon.ErrNotFound) {
 			return &bird.GalleryResp{
 				Code: -1,
-				Msg:  "记录不存在",
+				Msg:  "Record does not exist",
 				Data: nil,
 			}, nil
 		}
@@ -54,14 +54,14 @@ func (l *GalleryDeleteLogic) GalleryDelete(in *bird.IdReq) (*bird.GalleryResp, e
 	if gallery == nil {
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "记录不存在",
+			Msg:  "Record does not exist",
 			Data: nil,
 		}, nil
 	}
 	if gallery.UserId != forein_id {
 		return &bird.GalleryResp{
 			Code: -1,
-			Msg:  "此纪录不属于该用户",
+			Msg:  "Record does not belong to the user",
 			Data: nil,
 		}, nil
 	}
@@ -72,7 +72,7 @@ func (l *GalleryDeleteLogic) GalleryDelete(in *bird.IdReq) (*bird.GalleryResp, e
 	if err != nil {
 		return &bird.GalleryResp{
 			Code: -2,
-			Msg:  "失败",
+			Msg:  "fail",
 			Data: nil,
 		}, err
 	}
@@ -87,7 +87,7 @@ func (l *GalleryDeleteLogic) GalleryDelete(in *bird.IdReq) (*bird.GalleryResp, e
 
 	return &bird.GalleryResp{
 		Code: 0,
-		Msg:  "成功",
+		Msg:  "successful",
 		Data: nil,
 	}, nil
 }

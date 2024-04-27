@@ -31,7 +31,7 @@ func (l *GalleryPageLogic) GalleryPage(in *bird.GalleryPageReq) (resp *bird.Gall
 		if titles == nil || len(*titles) == 0 {
 			return &bird.GalleryListResp{
 				Code: 0,
-				Msg:  "成功",
+				Msg:  "successful",
 				Data: &bird.GalleryListRespData{
 					Data:  nil,
 					Total: 0,
@@ -99,7 +99,7 @@ func (l *GalleryPageLogic) GalleryPage(in *bird.GalleryPageReq) (resp *bird.Gall
 
 	return &bird.GalleryListResp{
 		Code: 0,
-		Msg:  "成功",
+		Msg:  "successful",
 		Data: &bird.GalleryListRespData{
 			Data:  resps,
 			Total: count,

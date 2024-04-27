@@ -29,20 +29,20 @@ func (l *DeleteIllustrationLogic) DeleteIllustration(in *bird.IdReq) (*bird.Bool
 	illustration, err := l.svcCtx.IllustrationModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("没有对应记录")
+			return nil, errors.New("No record")
 		}
 		return &bird.BooleanResp{
 			Code:    -2,
-			Message: "没有对应记录",
+			Message: "No record",
 			Data:    false,
 		}, err
 	}
 	if illustration == nil {
 		return &bird.BooleanResp{
 			Code:    -2,
-			Message: "没有对应记录",
+			Message: "No record",
 			Data:    false,
-		}, errors.New("没有对应记录")
+		}, errors.New("No record")
 	}
 	illustration.RecordState = 4
 	_, err = l.svcCtx.IllustrationModel.Update(l.ctx, illustration)
@@ -57,7 +57,7 @@ func (l *DeleteIllustrationLogic) DeleteIllustration(in *bird.IdReq) (*bird.Bool
 
 	return &bird.BooleanResp{
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 		Data:    true,
 	}, nil
 }

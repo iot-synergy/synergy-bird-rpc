@@ -38,7 +38,7 @@ func (l *IllustrationCreateLogic) IllustrationCreate(in *bird.IllustrationsCreat
 		return nil, err
 	}
 	if illustration != nil && illustration.RecordState != 4 {
-		return nil, errors.New("图鉴已创建过了")
+		return nil, errors.New("The illustration has already been created")
 	} else if illustration != nil && illustration.RecordState == 4 {
 		_, err = l.svcCtx.IllustrationModel.Delete(l.ctx, illustration.ID.Hex())
 		if err != nil {

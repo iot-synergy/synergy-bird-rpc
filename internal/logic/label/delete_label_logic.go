@@ -29,20 +29,20 @@ func (l *DeleteLabelLogic) DeleteLabel(in *bird.IdReq) (*bird.BooleanResp, error
 	label, err := l.svcCtx.LabelModel.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if errors.Is(err, mon.ErrNotFound) {
-			return nil, errors.New("没有对应记录")
+			return nil, errors.New("No record")
 		}
 		return &bird.BooleanResp{
 			Code:    -2,
-			Message: "没有对应记录",
+			Message: "No record",
 			Data:    false,
 		}, err
 	}
 	if label == nil {
 		return &bird.BooleanResp{
 			Code:    -2,
-			Message: "没有对应记录",
+			Message: "No record",
 			Data:    false,
-		}, errors.New("没有对应记录")
+		}, errors.New("No record")
 	}
 	label.RecordState = 4
 	_, err = l.svcCtx.LabelModel.Update(l.ctx, label)
@@ -57,7 +57,7 @@ func (l *DeleteLabelLogic) DeleteLabel(in *bird.IdReq) (*bird.BooleanResp, error
 
 	return &bird.BooleanResp{
 		Code:    0,
-		Message: "成功",
+		Message: "successful",
 		Data:    true,
 	}, nil
 }
