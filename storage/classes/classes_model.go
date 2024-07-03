@@ -3,12 +3,13 @@ package model
 import (
 	"context"
 	"errors"
+	"strconv"
+
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"strconv"
 )
 
 var _ ClassesModel = (*customClassesModel)(nil)
@@ -105,9 +106,9 @@ func (m *defaultClassesModel) FindListByParam(ctx context.Context, keyword strin
 			filterDate["classesId"] = id
 		} else {
 			filterDate["$or"] = bson.A{
-				bson.M{"classesName": bson.M{"$regex": keyword}},
-				bson.M{"chineseName": bson.M{"$regex": keyword}},
-				bson.M{"englishName": bson.M{"$regex": keyword}},
+				bson.M{"classesName": bson.M{"$regex": keyword, "$options": "i"}},
+				bson.M{"chineseName": bson.M{"$regex": keyword, "$options": "i"}},
+				bson.M{"englishName": bson.M{"$regex": keyword, "$options": "i"}},
 			}
 		}
 	}
