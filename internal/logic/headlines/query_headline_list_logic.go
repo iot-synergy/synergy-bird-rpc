@@ -55,12 +55,12 @@ func (l *QueryHeadlineListLogic) QueryHeadlineList(in *bird.HeadlineQueryReq) (*
 		id := strconv.FormatInt(curIndex+int64(index), 10)
 		list = append(list, &bird.Headline{
 			Id:          &id,
-			Url:         &item.Url,
-			Site:        &item.Site,
-			Cover:       &item.Cover,
-			Title:       &item.Title,
-			Description: &item.Description,
-			Image:       &item.Image,
+			Url:         pointy.GetPointer(item.Url),
+			Site:        pointy.GetPointer(item.Site),
+			Cover:       pointy.GetPointer(item.Cover),
+			Title:       pointy.GetPointer(item.Title),
+			Description: pointy.GetPointer(item.Description),
+			Image:       pointy.GetPointer(item.Image),
 			CreateAt:    pointy.GetPointer(item.CreateAt.Unix()),
 			UpdateAt:    pointy.GetPointer(item.UpdateAt.Unix()),
 		})
@@ -74,6 +74,4 @@ func (l *QueryHeadlineListLogic) QueryHeadlineList(in *bird.HeadlineQueryReq) (*
 			Data:  list,
 		},
 	}, nil
-
-	return &bird.HeadlineListResp{}, nil
 }

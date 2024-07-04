@@ -42,12 +42,12 @@ func (l *QueryAllHeadlinesLogic) QueryAllHeadlines(in *bird.HeadlineQueryPageReq
 	for _, item := range *data {
 		headlineListData.Data = append(headlineListData.Data, &bird.Headline{
 			Id:          pointy.GetPointer(item.ID.Hex()),
-			Url:         &item.Url,
-			Site:        &item.Site,
-			Cover:       &item.Cover,
-			Title:       &item.Title,
-			Description: &item.Description,
-			Image:       &item.Image,
+			Url:         pointy.GetPointer(item.Url),
+			Site:        pointy.GetPointer(item.Site),
+			Cover:       pointy.GetPointer(item.Cover),
+			Title:       pointy.GetPointer(item.Title),
+			Description: pointy.GetPointer(item.Description),
+			Image:       pointy.GetPointer(item.Image),
 			CreateAt:    pointy.GetPointer(item.CreateAt.Unix()),
 			UpdateAt:    pointy.GetPointer(item.UpdateAt.Unix()),
 		})
