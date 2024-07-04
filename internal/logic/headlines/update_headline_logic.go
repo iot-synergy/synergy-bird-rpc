@@ -36,19 +36,19 @@ func (l *UpdateHeadlineLogic) UpdateHeadline(in *bird.Headline) (*bird.Headline,
 	}
 
 	if in.GetSite() != "" {
-		result.Url = in.GetSite()
+		result.Site = in.GetSite()
 	}
 
 	if in.GetTitle() != "" {
-		result.Url = in.GetTitle()
+		result.Title = in.GetTitle()
 	}
 
 	if in.GetDescription() != "" {
-		result.Url = in.GetDescription()
+		result.Description = in.GetDescription()
 	}
 
 	if in.GetImage() != "" {
-		result.Url = in.GetImage()
+		result.Image = in.GetImage()
 	}
 
 	_, err = l.svcCtx.HeadlineModel.Update(l.ctx, result)
