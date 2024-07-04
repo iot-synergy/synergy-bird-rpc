@@ -6,8 +6,10 @@ package server
 import (
 	"context"
 
+	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/base"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/classes"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/gallery"
+	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/headlines"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/illustration"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/logic/label"
 	"github.com/iot-synergy/synergy-bird-rpc/internal/svc"
@@ -23,6 +25,11 @@ func NewBirdServer(svcCtx *svc.ServiceContext) *BirdServer {
 	return &BirdServer{
 		svcCtx: svcCtx,
 	}
+}
+
+func (s *BirdServer) InitDatabase(ctx context.Context, in *bird.Empty) (*bird.BaseResp, error) {
+	l := base.NewInitDatabaseLogic(ctx, s.svcCtx)
+	return l.InitDatabase(in)
 }
 
 func (s *BirdServer) GalleryCreate(ctx context.Context, in *bird.GalleryCreateReq) (*bird.GalleryResp, error) {
@@ -133,4 +140,29 @@ func (s *BirdServer) InitClasses(ctx context.Context, in *bird.NullReq) (*bird.B
 func (s *BirdServer) ClassesList(ctx context.Context, in *bird.ClassesListReq) (*bird.ClassesListResp, error) {
 	l := classes.NewClassesListLogic(ctx, s.svcCtx)
 	return l.ClassesList(in)
+}
+
+func (s *BirdServer) QueryHeadlineList(ctx context.Context, in *bird.HeadlineQueryReq) (*bird.HeadlineListResp, error) {
+	l := headlines.NewQueryHeadlineListLogic(ctx, s.svcCtx)
+	return l.QueryHeadlineList(in)
+}
+
+func (s *BirdServer) CreateHeadline(ctx context.Context, in *bird.Headline) (*bird.Headline, error) {
+	l := headlines.NewCreateHeadlineLogic(ctx, s.svcCtx)
+	return l.CreateHeadline(in)
+}
+
+func (s *BirdServer) UpdateHeadline(ctx context.Context, in *bird.Headline) (*bird.Headline, error) {
+	l := headlines.NewUpdateHeadlineLogic(ctx, s.svcCtx)
+	return l.UpdateHeadline(in)
+}
+
+func (s *BirdServer) DeleteHeadline(ctx context.Context, in *bird.Headline) (*bird.BaseResp, error) {
+	l := headlines.NewDeleteHeadlineLogic(ctx, s.svcCtx)
+	return l.DeleteHeadline(in)
+}
+
+func (s *BirdServer) QueryAllHeadlines(ctx context.Context, in *bird.HeadlineQueryPageReq) (*bird.HeadlineListResp, error) {
+	l := headlines.NewQueryAllHeadlinesLogic(ctx, s.svcCtx)
+	return l.QueryAllHeadlines(in)
 }

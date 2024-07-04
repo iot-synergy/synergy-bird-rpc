@@ -84,6 +84,7 @@ gen-mongo: # 生成mongo的代码
 	goctl model mongo --type label --dir ./storage/label --style=$(PROJECT_STYLE)
 	goctl model mongo --type gallery_count --dir ./storage/gallery_count --style=$(PROJECT_STYLE)
 	goctl model mongo --type classes --dir ./storage/classes --style=$(PROJECT_STYLE)
+	goctl model mongo --type headline --dir ./storage/headline --style=$(PROJECT_STYLE)
 
 .PHONY: gen-ent
 gen-ent: # Generate Ent codes | 生成 Ent 的代码

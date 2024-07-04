@@ -1,0 +1,53 @@
+ syntax = "proto3";
+
+message Headline {
+  optional string id = 1;
+  optional string url = 2;
+  optional string site = 3; 
+  optional bool cover = 4;
+  optional string title = 5;
+  optional string description = 6;
+  optional string image = 7;
+  optional int64 createAt = 8;
+  optional int64 updateAt = 9;
+}
+
+message HeadlineListData {  
+  int64 total = 1;
+  repeated Headline data = 2;
+}
+
+message HeadlineListResp {
+  int64 code = 1;
+  string msg = 2;
+  optional HeadlineListData data = 3;
+}
+
+message HeadlineQueryReq {
+  string curId = 1;
+}
+
+
+message HeadlineQueryPageReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string site = 3;
+}
+
+service bird {
+  //  group: headlines
+  rpc queryHeadlineList(HeadlineQueryReq) returns (HeadlineListResp);
+
+  //  group: headlines
+  rpc createHeadline(Headline) returns (Headline);
+
+  //  group: headlines
+  rpc updateHeadline(Headline) returns (Headline);
+
+  //  group: headlines
+  rpc deleteHeadline(Headline) returns (BaseResp);
+
+  //  group: headlines
+  rpc queryAllHeadlines(HeadlineQueryPageReq) returns (HeadlineListResp);
+
+}

@@ -11,22 +11,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type labelModel interface {
-	Insert(ctx context.Context, data *Label) error
-	FindOne(ctx context.Context, id string) (*Label, error)
-	Update(ctx context.Context, data *Label) (*mongo.UpdateResult, error)
+type headlineModel interface {
+	Insert(ctx context.Context, data *Headline) error
+	FindOne(ctx context.Context, id string) (*Headline, error)
+	Update(ctx context.Context, data *Headline) (*mongo.UpdateResult, error)
 	Delete(ctx context.Context, id string) (int64, error)
 }
 
-type defaultLabelModel struct {
+type defaultHeadlineModel struct {
 	conn *mon.Model
 }
 
-func newDefaultLabelModel(conn *mon.Model) *defaultLabelModel {
-	return &defaultLabelModel{conn: conn}
+func newDefaultHeadlineModel(conn *mon.Model) *defaultHeadlineModel {
+	return &defaultHeadlineModel{conn: conn}
 }
 
-func (m *defaultLabelModel) Insert(ctx context.Context, data *Label) error {
+func (m *defaultHeadlineModel) Insert(ctx context.Context, data *Headline) error {
 	if data.ID.IsZero() {
 		data.ID = primitive.NewObjectID()
 		data.CreateAt = time.Now()
@@ -37,13 +37,13 @@ func (m *defaultLabelModel) Insert(ctx context.Context, data *Label) error {
 	return err
 }
 
-func (m *defaultLabelModel) FindOne(ctx context.Context, id string) (*Label, error) {
+func (m *defaultHeadlineModel) FindOne(ctx context.Context, id string) (*Headline, error) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, ErrInvalidObjectId
 	}
 
-	var data Label
+	var data Headline
 
 	err = m.conn.FindOne(ctx, &data, bson.M{"_id": oid})
 	switch err {
@@ -56,14 +56,14 @@ func (m *defaultLabelModel) FindOne(ctx context.Context, id string) (*Label, err
 	}
 }
 
-func (m *defaultLabelModel) Update(ctx context.Context, data *Label) (*mongo.UpdateResult, error) {
+func (m *defaultHeadlineModel) Update(ctx context.Context, data *Headline) (*mongo.UpdateResult, error) {
 	data.UpdateAt = time.Now()
 
 	res, err := m.conn.UpdateOne(ctx, bson.M{"_id": data.ID}, bson.M{"$set": data})
 	return res, err
 }
 
-func (m *defaultLabelModel) Delete(ctx context.Context, id string) (int64, error) {
+func (m *defaultHeadlineModel) Delete(ctx context.Context, id string) (int64, error) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return 0, ErrInvalidObjectId

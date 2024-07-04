@@ -13,10 +13,14 @@ import (
 )
 
 type (
+	BaseIDResp              = bird.BaseIDResp
+	BaseResp                = bird.BaseResp
+	BaseUUIDResp            = bird.BaseUUIDResp
 	BooleanResp             = bird.BooleanResp
 	ClassesData             = bird.ClassesData
 	ClassesListReq          = bird.ClassesListReq
 	ClassesListResp         = bird.ClassesListResp
+	Empty                   = bird.Empty
 	GalleryCount            = bird.GalleryCount
 	GalleryCountData        = bird.GalleryCountData
 	GalleryCreateReq        = bird.GalleryCreateReq
@@ -27,6 +31,13 @@ type (
 	GalleryResp             = bird.GalleryResp
 	GalleryRespData         = bird.GalleryRespData
 	GalleryUpdateReq        = bird.GalleryUpdateReq
+	Headline                = bird.Headline
+	HeadlineListData        = bird.HeadlineListData
+	HeadlineListResp        = bird.HeadlineListResp
+	HeadlineQueryPageReq    = bird.HeadlineQueryPageReq
+	HeadlineQueryReq        = bird.HeadlineQueryReq
+	IDReq                   = bird.IDReq
+	IDsReq                  = bird.IDsReq
 	IdReq                   = bird.IdReq
 	IllustrationsCreateReq  = bird.IllustrationsCreateReq
 	IllustrationsListReq    = bird.IllustrationsListReq
@@ -46,8 +57,12 @@ type (
 	LabelUpdateReq          = bird.LabelUpdateReq
 	LabelVo                 = bird.LabelVo
 	NullReq                 = bird.NullReq
+	PageInfoReq             = bird.PageInfoReq
+	UUIDReq                 = bird.UUIDReq
+	UUIDsReq                = bird.UUIDsReq
 
 	Bird interface {
+		InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error)
 		GalleryCreate(ctx context.Context, in *GalleryCreateReq, opts ...grpc.CallOption) (*GalleryResp, error)
 		GalleryDelete(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*GalleryResp, error)
 		GalleryList(ctx context.Context, in *GalleryListReq, opts ...grpc.CallOption) (*GalleryListResp, error)
@@ -70,6 +85,11 @@ type (
 		DeleteLabel(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*BooleanResp, error)
 		InitClasses(ctx context.Context, in *NullReq, opts ...grpc.CallOption) (*BooleanResp, error)
 		ClassesList(ctx context.Context, in *ClassesListReq, opts ...grpc.CallOption) (*ClassesListResp, error)
+		QueryHeadlineList(ctx context.Context, in *HeadlineQueryReq, opts ...grpc.CallOption) (*HeadlineListResp, error)
+		CreateHeadline(ctx context.Context, in *Headline, opts ...grpc.CallOption) (*Headline, error)
+		UpdateHeadline(ctx context.Context, in *Headline, opts ...grpc.CallOption) (*Headline, error)
+		DeleteHeadline(ctx context.Context, in *Headline, opts ...grpc.CallOption) (*BaseResp, error)
+		QueryAllHeadlines(ctx context.Context, in *HeadlineQueryPageReq, opts ...grpc.CallOption) (*HeadlineListResp, error)
 	}
 
 	defaultBird struct {
@@ -81,6 +101,11 @@ func NewBird(cli zrpc.Client) Bird {
 	return &defaultBird{
 		cli: cli,
 	}
+}
+
+func (m *defaultBird) InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.InitDatabase(ctx, in, opts...)
 }
 
 func (m *defaultBird) GalleryCreate(ctx context.Context, in *GalleryCreateReq, opts ...grpc.CallOption) (*GalleryResp, error) {
@@ -191,4 +216,29 @@ func (m *defaultBird) InitClasses(ctx context.Context, in *NullReq, opts ...grpc
 func (m *defaultBird) ClassesList(ctx context.Context, in *ClassesListReq, opts ...grpc.CallOption) (*ClassesListResp, error) {
 	client := bird.NewBirdClient(m.cli.Conn())
 	return client.ClassesList(ctx, in, opts...)
+}
+
+func (m *defaultBird) QueryHeadlineList(ctx context.Context, in *HeadlineQueryReq, opts ...grpc.CallOption) (*HeadlineListResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.QueryHeadlineList(ctx, in, opts...)
+}
+
+func (m *defaultBird) CreateHeadline(ctx context.Context, in *Headline, opts ...grpc.CallOption) (*Headline, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.CreateHeadline(ctx, in, opts...)
+}
+
+func (m *defaultBird) UpdateHeadline(ctx context.Context, in *Headline, opts ...grpc.CallOption) (*Headline, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.UpdateHeadline(ctx, in, opts...)
+}
+
+func (m *defaultBird) DeleteHeadline(ctx context.Context, in *Headline, opts ...grpc.CallOption) (*BaseResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.DeleteHeadline(ctx, in, opts...)
+}
+
+func (m *defaultBird) QueryAllHeadlines(ctx context.Context, in *HeadlineQueryPageReq, opts ...grpc.CallOption) (*HeadlineListResp, error) {
+	client := bird.NewBirdClient(m.cli.Conn())
+	return client.QueryAllHeadlines(ctx, in, opts...)
 }

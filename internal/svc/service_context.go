@@ -5,6 +5,7 @@ import (
 	model5 "github.com/iot-synergy/synergy-bird-rpc/storage/classes"
 	model "github.com/iot-synergy/synergy-bird-rpc/storage/gallery"
 	model4 "github.com/iot-synergy/synergy-bird-rpc/storage/galleryCount"
+	headline_model "github.com/iot-synergy/synergy-bird-rpc/storage/headline"
 	model2 "github.com/iot-synergy/synergy-bird-rpc/storage/illustration"
 	model3 "github.com/iot-synergy/synergy-bird-rpc/storage/label"
 	"github.com/iot-synergy/synergy-event-rpc/synergyeventclient"
@@ -13,6 +14,7 @@ import (
 
 type ServiceContext struct {
 	Config            config.Config
+	HeadlineModel     headline_model.HeadlineModel
 	GalleryModel      model.GalleryModel
 	IllustrationModel model2.IllustrationModel
 	LabelModel        model3.LabelModel
@@ -25,6 +27,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config:            c,
+		HeadlineModel:     headline_model.NewHeadlineModel(c.MonDb.Url, c.MonDb.DbName, "headline"),
 		GalleryModel:      model.NewGalleryModel(c.MonDb.Url, c.MonDb.DbName, "gallery"),
 		IllustrationModel: model2.NewIllustrationModel(c.MonDb.Url, c.MonDb.DbName, "illustration"),
 		LabelModel:        model3.NewLabelModel(c.MonDb.Url, c.MonDb.DbName, "label"),

@@ -1,74 +1,118 @@
 syntax = "proto3";
 
 package bird;
-option go_package = "./bird";
+option go_package="./bird";
 
-message IdReq {
+message GalleryListRespData {
+  repeated GalleryRespData data = 1;
+  int64 total = 2;
+}
+
+message IllustrationsListReq {
+  repeated string labels = 1;
+  optional string typee = 2;
+  // 1:Created
+  optional int32 state = 3;
+  optional string keyword = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+}
+
+message ClassesData {
   string id = 1;
+  int64 ClassesId = 2;
+  string ClassesName = 3;
+  string ChineseName = 4;
+  string EnglishName = 5;
+}
+
+message GalleryCountData {
+  int32 Unlock = 1;
+  int32 Lock = 2;
+  int32 Count = 3;
+}
+
+//  base message
+message Empty {}
+
+message LabelListVo {
+  int64 code = 1;
+  string message = 2;
+  LabelListVoData data = 3;
+}
+
+message NullReq {}
+
+message HeadlineQueryReq {
+  string curId = 1;
+}
+
+message LabelResp {
+  string id = 1;
+  // 1:Created
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string name = 4;
+  string typee = 5;
+  string parentId = 6;
 }
 
 message GalleryCreateReq {
   optional string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
+  // 1:Created
   optional int32 recordState = 2;
   string name = 3;
   optional string userId = 4;
   repeated string traceIds = 5;
 }
 
-message GalleryUpdateReq {
-  string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  optional int32 recordState = 2;
-  optional string name = 3;
-  optional string userId = 4;
-  optional string TraceId = 6;
+message LabelListReq {
+  optional string typee = 2;
+  optional string parentId = 3;
+  uint64 page = 4;
+  uint64 pageSize = 5;
+  optional string name = 6;
+  optional int32 recordState = 7;
 }
 
-message GalleryListReq {
-  optional string illustrationId = 1;
-  optional string name = 2;
-  optional int64 startTime = 3;
-  optional int64 endTime = 4;
-  uint64 page = 5;
-  uint64 pageSize = 6;
-  repeated string labelIds = 7;
+message LabelListVoData {
+  int64 total = 1;
+  repeated LabelResp data = 2;
 }
 
-message GalleryPageReq {
-  optional string illustrationId = 1;
-  optional string name = 2;
-  optional int64 startTime = 3;
-  optional int64 endTime = 4;
-  uint64 page = 5;
-  uint64 pageSize = 6;
-  repeated string labelIds = 7;
-  string userId = 8;
-}
-
-message GalleryResp {
+message ClassesListResp {
   int64 code = 1;
   string msg = 2;
-  GalleryRespData data = 3;
+  int64 total = 3;
+  repeated ClassesData data = 4;
 }
 
-message GalleryRespData {
+message Headline {
+  optional string id = 1;
+  optional string url = 2;
+  optional string site = 3;
+  optional bool cover = 4;
+  optional string title = 5;
+  optional string description = 6;
+  optional string image = 7;
+  optional int64 createAt = 8;
+  optional int64 updateAt = 9;
+}
+
+message HeadlineListResp {
+  int64 code = 1;
+  string msg = 2;
+  optional HeadlineListData data = 3;
+}
+
+message BaseUUIDResp {
   string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 recordState = 2;
-  int64 createTime = 3;
-  string name = 4;
-  string userId = 5;
-  IllustrationsResp Illustration = 6;
+  string msg = 2;
+}
+
+message PageInfoReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
 }
 
 message GalleryListResp {
@@ -77,99 +121,27 @@ message GalleryListResp {
   string msg = 4;
 }
 
-message GalleryListRespData {
-  repeated GalleryRespData data = 1;
-  int64 total = 2;
+message ClassesListReq {
+  optional string keyword = 1;
+  uint64 page = 2;
+  uint64 pageSize = 3;
 }
 
-message IllustrationsCreateReq {
-  optional string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 recordState = 2;
-  int64 classesId = 3;
-  double score = 4;
-  string wikiUrl = 5;
-  string imagePath = 6;
-  string iconPath = 7;
-  repeated string moreImages = 8;
-  string typee = 9;
-  repeated string labels = 10;
-  string description = 11;
+message BaseResp {
+  string msg = 1;
 }
 
-message IllustrationsUpdateReq {
+message IDsReq {
+  repeated uint64 ids = 1;
+}
+
+message UUIDReq {
   string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  optional int32 recordState = 2;
-  optional int64 classesId = 3;
-  optional double score = 4;
-  optional string wikiUrl = 5;
-  optional string imagePath = 6;
-  optional string iconPath = 7;
-  repeated string moreImages = 8;
-  optional string typee = 9;
-  repeated string labels = 10;
-  optional string description = 11;
-}
-
-message IllustrationsListReq {
-  repeated string labels = 1;
-  optional string typee = 2;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  optional int32 state = 3;
-  optional string keyword = 4;
-  uint64 page = 5;
-  uint64 pageSize = 6;
-}
-
-message IllustrationsPageReq {
-  repeated string labels = 1;
-  optional string typee = 2;
-  optional int32 state = 3;
-  optional string keyword = 4;
-  uint64 page = 5;
-  uint64 pageSize = 6;
-  optional bool isUnlock = 7;
-}
-
-
-message IllustrationsResp {
-  string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 recordState = 2;
-  int64 createTime = 3;
-  string title = 4;
-  double score = 5;
-  string wikiUrl = 6;
-  string imagePath = 7;
-  string iconPath = 8;
-  repeated string moreImages = 9;
-  string typee = 10;
-  repeated string labels = 11;
-  string description = 12;
-  int64 classesId = 13;
-  string chineseName = 14;
-  string englishName = 15;
 }
 
 message IllustrationsRespVo {
   string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
+  // 1:Created
   int32 recordState = 2;
   int64 createTime = 3;
   string title = 4;
@@ -188,6 +160,96 @@ message IllustrationsRespVo {
   optional int64 unlockTime = 17;
 }
 
+message GalleryCount {
+  int64 code = 1;
+  string msg = 2;
+  GalleryCountData data = 4;
+}
+
+message IDReq {
+  uint64 id = 1;
+}
+
+message GalleryPageReq {
+  optional string illustrationId = 1;
+  optional string name = 2;
+  optional int64 startTime = 3;
+  optional int64 endTime = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+  repeated string labelIds = 7;
+  string userId = 8;
+}
+
+message LabelCreateReq {
+  optional string id = 1;
+  // 1:Created
+  int32 recordState = 2;
+  string name = 3;
+  string typee = 4;
+  string parentId = 5;
+}
+
+message BooleanResp {
+  int64 code = 1;
+  string message = 2;
+  bool data = 3;
+}
+
+message GalleryUpdateReq {
+  string id = 1;
+  // 1:Created
+  optional int32 recordState = 2;
+  optional string name = 3;
+  optional string userId = 4;
+  optional string TraceId = 6;
+}
+
+message GalleryResp {
+  int64 code = 1;
+  string msg = 2;
+  GalleryRespData data = 3;
+}
+
+message GalleryRespData {
+  string id = 1;
+  // 1:Created
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string name = 4;
+  string userId = 5;
+  IllustrationsResp Illustration = 6;
+}
+
+message IllustrationsPageReq {
+  repeated string labels = 1;
+  optional string typee = 2;
+  optional int32 state = 3;
+  optional string keyword = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+  optional bool isUnlock = 7;
+}
+
+message IllustrationsResp {
+  string id = 1;
+  // 1:Created
+  int32 recordState = 2;
+  int64 createTime = 3;
+  string title = 4;
+  double score = 5;
+  string wikiUrl = 6;
+  string imagePath = 7;
+  string iconPath = 8;
+  repeated string moreImages = 9;
+  string typee = 10;
+  repeated string labels = 11;
+  string description = 12;
+  int64 classesId = 13;
+  string chineseName = 14;
+  string englishName = 15;
+}
+
 message IllustrationsListResp {
   repeated IllustrationsRespVo results = 1;
   int64 total = 2;
@@ -201,57 +263,6 @@ message IllustrationsListVo {
   IllustrationsListVoData Data = 3;
 }
 
-message IllustrationsListVoData {
-  int64 total = 1;
-  repeated IllustrationsRespVo Data = 2;
-}
-
-message LabelCreateReq{
-  optional string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 recordState = 2;
-  string name = 3;
-  string typee = 4;
-  string parentId = 5;
-}
-
-message LabelUpdateReq{
-  string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  optional int32 recordState = 2;
-  optional string name = 3;
-  optional string typee = 4;
-  optional string parentId = 5;
-}
-
-message LabelListReq {
-  optional string typee = 2;
-  optional string parentId = 3;
-  uint64 page = 4;
-  uint64 pageSize = 5;
-  optional string name = 6;
-  optional int32 recordState = 7;
-}
-
-message LabelResp{
-  string id = 1;
-  //1:Created
-  //2:Normal
-  //3:Deleted
-  //4:Forbidden
-  int32 recordState = 2;
-  int64 createTime = 3;
-  string name = 4;
-  string typee = 5;
-  string parentId = 6;
-}
-
 message LabelListResp {
   repeated LabelResp results = 1;
   int64 total = 2;
@@ -259,15 +270,78 @@ message LabelListResp {
   string message = 4;
 }
 
-message LabelListVo {
-  int64 code = 1;
-  string message = 2;
-  LabelListVoData data = 3;
+message BaseIDResp {
+  uint64 id = 1;
+  string msg = 2;
 }
 
-message LabelListVoData {
+message HeadlineQueryPageReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string site = 3;
+}
+
+message HeadlineListData {
   int64 total = 1;
-  repeated LabelResp data = 2;
+  repeated Headline data = 2;
+}
+
+message IdReq {
+  string id = 1;
+}
+
+message GalleryListReq {
+  optional string illustrationId = 1;
+  optional string name = 2;
+  optional int64 startTime = 3;
+  optional int64 endTime = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+  repeated string labelIds = 7;
+}
+
+message IllustrationsCreateReq {
+  optional string id = 1;
+  // 1:Created
+  int32 recordState = 2;
+  int64 classesId = 3;
+  double score = 4;
+  string wikiUrl = 5;
+  string imagePath = 6;
+  string iconPath = 7;
+  repeated string moreImages = 8;
+  string typee = 9;
+  repeated string labels = 10;
+  string description = 11;
+}
+
+message IllustrationsUpdateReq {
+  string id = 1;
+  // 1:Created
+  optional int32 recordState = 2;
+  optional int64 classesId = 3;
+  optional double score = 4;
+  optional string wikiUrl = 5;
+  optional string imagePath = 6;
+  optional string iconPath = 7;
+  repeated string moreImages = 8;
+  optional string typee = 9;
+  repeated string labels = 10;
+  optional string description = 11;
+}
+
+message IllustrationsListVoData {
+  int64 total = 1;
+  repeated IllustrationsRespVo Data = 2;
+}
+
+message LabelUpdateReq {
+  string id = 1;
+  // 1:Created
+  optional int32 recordState = 2;
+  optional string name = 3;
+  optional string typee = 4;
+  optional string parentId = 5;
 }
 
 message LabelVo {
@@ -276,92 +350,66 @@ message LabelVo {
   LabelResp data = 3;
 }
 
-message BooleanResp {
-  int64 code = 1;
-  string message = 2;
-  bool data = 3;
-}
-
-message NullReq {
-
-}
-
-message ClassesListReq {
-  optional string keyword = 1;
-  uint64 page = 2;
-  uint64 pageSize = 3;
-}
-
-message ClassesListResp {
-  int64 code = 1;
-  string msg = 2;
-  int64 total = 3;
-  repeated ClassesData data = 4;
-}
-
-message ClassesData {
-  string id = 1;
-  int64 ClassesId = 2;
-  string ClassesName = 3;
-  string ChineseName = 4;
-  string EnglishName = 5;
-}
-
-message GalleryCount{
-  int64 code = 1;
-  string msg = 2;
-  GalleryCountData data = 4;
-}
-
-message GalleryCountData{
-  int32 Unlock = 1;
-  int32 Lock = 2;
-  int32 Count = 3;
+message UUIDsReq {
+  repeated string ids = 1;
 }
 
 service bird {
-  //  group: gallery
+  //  group: base
+  rpc initDatabase(Empty) returns (BaseResp);
+  //   group: gallery
   rpc galleryCreate(GalleryCreateReq) returns (GalleryResp);
-  //  group: gallery
+  //   group: gallery
   rpc galleryDelete(IdReq) returns (GalleryResp);
-  //  group: gallery
+  //   group: gallery
   rpc galleryList(GalleryListReq) returns (GalleryListResp);
-  //  group: gallery
+  //   group: gallery
   rpc galleryPage(GalleryPageReq) returns (GalleryListResp);
-  //  group: gallery
-  rpc galleryCount(NullReq) returns(GalleryCount);
-  //  group: illustration
+  //   group: gallery
+  rpc galleryCount(NullReq) returns (GalleryCount);
+  //   group: illustration
   rpc illustrationCreate(IllustrationsCreateReq) returns (IllustrationsResp);
-  //  group: illustration
+  //   group: illustration
   rpc illustrationUpdate(IllustrationsUpdateReq) returns (IllustrationsResp);
-  //  group: illustration
+  //   group: illustration
   rpc illustrationList(IllustrationsListReq) returns (IllustrationsListResp);
-  //  group: illustration
+  //   group: illustration
   rpc findIllustrationByPage(IllustrationsPageReq) returns (IllustrationsListVo);
-  //  group: illustration
+  //   group: illustration
   rpc publishIllustration(IdReq) returns (IllustrationsResp);
-  //  group: illustration
+  //   group: illustration
   rpc unpublishIllustration(IdReq) returns (IllustrationsResp);
-  //  group: illustration
-  rpc deleteIllustration(IdReq) returns(BooleanResp);
-  //  group: label
+  //   group: illustration
+  rpc deleteIllustration(IdReq) returns (BooleanResp);
+  //   group: label
   rpc labelCreate(LabelCreateReq) returns (LabelResp);
-  //  group: label
+  //   group: label
   rpc labelUpdate(LabelUpdateReq) returns (LabelResp);
-  //  group: label
+  //   group: label
   rpc labelList(LabelListReq) returns (LabelListResp);
-  //  group: label
+  //   group: label
   rpc findLabelByPage(LabelListReq) returns (LabelListVo);
-  //  group: label
-  rpc findLabelById (IdReq) returns (LabelVo);
-  //  group: label
+  //   group: label
+  rpc findLabelById(IdReq) returns (LabelVo);
+  //   group: label
   rpc publishLabel(IdReq) returns (LabelResp);
-  //  group: label
+  //   group: label
   rpc unpublishLabel(IdReq) returns (LabelResp);
-  //  group: label
-  rpc deleteLabel(IdReq) returns(BooleanResp);
-  //  group: classes
-  rpc initClasses(NullReq) returns(BooleanResp);
-  //  group: classes
-  rpc classesList(ClassesListReq) returns(ClassesListResp);
+  //   group: label
+  rpc deleteLabel(IdReq) returns (BooleanResp);
+  //   group: classes
+  rpc initClasses(NullReq) returns (BooleanResp);
+  //   group: classes
+  rpc classesList(ClassesListReq) returns (ClassesListResp);
+  //   group: headlines
+  rpc queryHeadlineList(HeadlineQueryReq) returns (HeadlineListResp);
+  //   group: headlines
+  rpc createHeadline(Headline) returns (Headline);
+  //   group: headlines
+  rpc updateHeadline(Headline) returns (Headline);
+  //   group: headlines
+  rpc deleteHeadline(Headline) returns (BaseResp);
+  //   group: headlines
+  rpc queryAllHeadlines(HeadlineQueryPageReq) returns (HeadlineListResp);
 }
+
