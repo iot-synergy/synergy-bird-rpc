@@ -11,11 +11,11 @@ type Headline struct {
 
 	Url         string `bson:"url,omitempty"  json:"url"`
 	Site        string `bson:"site,omitempty" json:"site"`
-	Cover       bool   `bson:"cover,omitempty"  json:"cover"`
+	Cover       bool   `bson:"cover"  json:"cover"`
 	Title       string `bson:"title,omitempty"  json:"title"`
 	Description string `bson:"description,omitempty"  json:"description"`
 	Image       string `bson:"image,omitempty"  json:"image"`
-	State       bool   `bson:"state,omitempty"  json:"state"`
+	State       bool   `bson:"state"  json:"state"`
 
 	UpdateAt time.Time `bson:"updateAt,omitempty" json:"updateAt,omitempty"`
 	CreateAt time.Time `bson:"createAt,omitempty" json:"createAt,omitempty"`

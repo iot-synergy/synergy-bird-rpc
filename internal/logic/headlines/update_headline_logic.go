@@ -31,6 +31,17 @@ func (l *UpdateHeadlineLogic) UpdateHeadline(in *bird.Headline) (*bird.Headline,
 		return nil, err
 	}
 
+	// update := &model.Headline{
+	// 	Url:         in.GetUrl(),
+	// 	Site:        in.GetSite(),
+	// 	Cover:       in.GetCover(),
+	// 	Title:       in.GetTitle(),
+	// 	Description: in.GetDescription(),
+	// 	Image:       in.GetImage(),
+	// }
+
+	// update.ID =
+
 	if in.Cover != nil {
 		result.Cover = in.GetCover()
 	}
