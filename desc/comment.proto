@@ -8,8 +8,9 @@ message Headline {
   optional string title = 5;
   optional string description = 6;
   optional string image = 7;
-  optional int64 createAt = 8;
-  optional int64 updateAt = 9;
+  optional bool state = 8;
+  optional int64 createAt = 9;
+  optional int64 updateAt = 10;
 }
 
 message HeadlineListData {  

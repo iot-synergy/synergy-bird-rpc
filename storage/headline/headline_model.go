@@ -118,7 +118,7 @@ func (m *customHeadlineModel) FindListByIndex(ctx context.Context, lastIndex int
 	findoptions.SetSkip(lastIndex)
 	findoptions.SetSort(bson.D{bson.E{Key: "updateAt", Value: -1}})
 
-	err := m.conn.Find(ctx, &data, nil, findoptions)
+	err := m.conn.Find(ctx, &data, bson.M{}, findoptions)
 	if err != nil {
 		return nil, err
 	}

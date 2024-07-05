@@ -15,6 +15,7 @@ type Headline struct {
 	Title       string `bson:"title,omitempty"  json:"title"`
 	Description string `bson:"description,omitempty"  json:"description"`
 	Image       string `bson:"image,omitempty"  json:"image"`
+	State       bool   `bson:"state,omitempty"  json:"state"`
 
 	UpdateAt time.Time `bson:"updateAt,omitempty" json:"updateAt,omitempty"`
 	CreateAt time.Time `bson:"createAt,omitempty" json:"createAt,omitempty"`
