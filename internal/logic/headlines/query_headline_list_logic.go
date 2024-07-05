@@ -52,7 +52,7 @@ func (l *QueryHeadlineListLogic) QueryHeadlineList(in *bird.HeadlineQueryReq) (*
 	}
 
 	for index, item := range *_list {
-		id := strconv.FormatInt(curIndex+int64(index), 10)
+		id := strconv.FormatInt(curIndex+int64(index)+1, 10)
 		list = append(list, &bird.Headline{
 			Id:          &id,
 			Url:         pointy.GetPointer(item.Url),
