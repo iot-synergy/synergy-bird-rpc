@@ -31,6 +31,10 @@ func (l *UpdateHeadlineLogic) UpdateHeadline(in *bird.Headline) (*bird.Headline,
 		return nil, err
 	}
 
+	if in.Cover != nil {
+		result.Cover = in.GetCover()
+	}
+
 	if in.GetUrl() != "" {
 		result.Url = in.GetUrl()
 	}
